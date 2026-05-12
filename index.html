@@ -1724,6 +1724,109 @@ img{max-width:100%;height:auto}
   .games-grid{grid-template-columns:repeat(2,1fr)}
   .game-card.featured{grid-column:span 2}
 }
+/* ════════════════════════════════
+   SUPPORT PAGE
+════════════════════════════════ */
+#page-support { max-width: 680px; margin: 0 auto; padding-bottom: 40px; }
+
+/* Hero */
+.sup-hero {
+  display: flex; align-items: center; gap: 18px;
+  padding: 28px 24px 24px;
+  background: linear-gradient(135deg, rgba(10,18,44,0.96) 0%, rgba(12,30,70,0.96) 100%);
+  border: 1px solid rgba(56,189,248,0.18);
+  border-radius: 20px; margin-bottom: 20px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+.sup-logo {
+  width: 76px; height: 76px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(249,115,22,0.15));
+  border-radius: 20px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.sup-brand {
+  font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 900;
+  color: #1e3a6e; letter-spacing: -0.01em;
+  text-shadow: none;
+  color: #e2e8f0;
+}
+.sup-brand span { color: #f97316; }
+.sup-tagline { font-size: 12px; color: #64748b; font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* Title block */
+.sup-title-block { text-align: center; margin-bottom: 24px; }
+.sup-main-title {
+  font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 900;
+  color: #f0f6ff; margin-bottom: 6px;
+}
+.sup-main-sub { font-size: 14px; color: #64748b; }
+
+/* Contact cards */
+.sup-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+@media (max-width: 520px) { .sup-cards-grid { grid-template-columns: 1fr; } }
+
+.sup-contact-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 16px; border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(15,23,42,0.97);
+  text-decoration: none; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.sup-contact-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.3); }
+.sup-tg:hover { border-color: rgba(41,182,246,0.4); }
+.sup-ig:hover { border-color: rgba(249,115,22,0.4); }
+
+.sup-card-icon {
+  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.sup-icon-tg { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; }
+.sup-icon-ig { background: linear-gradient(135deg, #f97316, #ec4899, #a855f7); color: white; }
+
+.sup-card-info { flex: 1; min-width: 0; }
+.sup-card-platform { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.sup-card-handle { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: #e2e8f0; margin: 2px 0; }
+.sup-card-desc { font-size: 11px; color: #475569; }
+.sup-card-arrow { font-size: 18px; color: #334155; transition: transform 0.2s; }
+.sup-contact-card:hover .sup-card-arrow { transform: translateX(4px); color: #64748b; }
+
+/* FAQ */
+.sup-faq-block { margin-bottom: 24px; }
+.sup-faq-title {
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800;
+  color: #e2e8f0; margin-bottom: 14px;
+}
+.sup-faq-list { display: flex; flex-direction: column; gap: 8px; }
+.sup-faq-item {
+  border-radius: 14px; border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(15,23,42,0.97);
+  overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s;
+}
+.sup-faq-item:hover { border-color: rgba(56,189,248,0.25); }
+.sup-faq-item.open { border-color: rgba(56,189,248,0.3); }
+.sup-faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; font-size: 14px; font-weight: 700; color: #cbd5e1;
+}
+.sup-faq-ic { font-size: 18px; color: #38bdf8; font-weight: 300; transition: transform 0.2s; }
+.sup-faq-item.open .sup-faq-ic { transform: rotate(45deg); }
+.sup-faq-a {
+  display: none; padding: 0 18px 16px;
+  font-size: 13px; color: #94a3b8; line-height: 1.65;
+}
+.sup-faq-item.open .sup-faq-a { display: block; }
+
+/* Footer note */
+.sup-footer-note {
+  display: flex; align-items: center; gap: 7px; justify-content: center;
+  font-size: 12px; color: #475569; font-weight: 600;
+  padding: 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -1846,6 +1949,12 @@ img{max-width:100%;height:auto}
         <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
       </svg>
       Profil
+    </div>
+    <div class="nav-item" onclick="showPage('support')" data-page="support">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Qo'llab-quvvatlash
     </div>
   </nav>
 
@@ -2597,6 +2706,111 @@ img{max-width:100%;height:auto}
       </div>
       <button class="logout-btn" onclick="doLogout()">Chiqish</button>
     </div>
+
+    <!-- SUPPORT PAGE -->
+    <div class="page" id="page-support">
+      <!-- Hero -->
+      <div class="sup-hero">
+        <div class="sup-logo">
+          <!-- BrainGame style SVG logo -->
+          <svg width="72" height="72" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="56" fill="url(#bgGrad)" opacity="0.12"/>
+            <!-- Gear outer -->
+            <path d="M60 18 L65 10 L75 14 L73 23 A40 40 0 0 1 85 31 L94 27 L100 36 L93 42 A40 40 0 0 1 96 54 L105 57 L105 67 L96 70 A40 40 0 0 1 93 82 L100 88 L94 97 L85 93 A40 40 0 0 1 73 101 L75 110 L65 114 L60 106 L55 114 L45 110 L47 101 A40 40 0 0 1 35 93 L26 97 L20 88 L27 82 A40 40 0 0 1 24 70 L15 67 L15 57 L24 54 A40 40 0 0 1 27 42 L20 36 L26 27 L35 31 A40 40 0 0 1 47 23 L45 14 L55 10 Z" fill="url(#gearGrad)" opacity="0.25"/>
+            <!-- Brain shape -->
+            <ellipse cx="60" cy="58" rx="28" ry="26" fill="url(#brainGrad)" opacity="0.9"/>
+            <!-- Puzzle lines -->
+            <path d="M60 36 L60 80 M36 58 L84 58" stroke="white" stroke-width="2" opacity="0.4"/>
+            <!-- Icons inside -->
+            <text x="46" y="53" font-size="12" fill="#f97316">⚛</text>
+            <text x="61" y="53" font-size="10" fill="white">🎓</text>
+            <text x="46" y="68" font-size="11" fill="#fb923c">♟</text>
+            <text x="61" y="68" font-size="10" fill="white">📖</text>
+            <!-- Arrow -->
+            <path d="M80 30 Q95 20 95 38" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <polygon points="95,38 88,32 98,30" fill="#f97316"/>
+            <defs>
+              <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+              <linearGradient id="gearGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+              <linearGradient id="brainGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="50%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="sup-hero-text">
+          <div class="sup-brand">BRAINGAME<span>.UZ</span></div>
+          <div class="sup-tagline">O'yin orqali o'rganing va charxlang</div>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="sup-title-block">
+        <h1 class="sup-main-title">Qo'llab-quvvatlash markazi</h1>
+        <p class="sup-main-sub">Savollaringiz bormi? Biz doim siz bilan birga!</p>
+      </div>
+
+      <!-- Contact Cards -->
+      <div class="sup-cards-grid">
+
+        <!-- Telegram -->
+        <a href="https://t.me/jaloliddinee" target="_blank" class="sup-contact-card sup-tg">
+          <div class="sup-card-icon sup-icon-tg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.04 9.61c-.15.674-.545.838-1.104.522l-3.037-2.238-1.465 1.41c-.162.162-.298.298-.61.298l.218-3.083 5.62-5.077c.245-.218-.053-.338-.378-.12L7.16 14.15 4.16 13.22c-.66-.205-.674-.66.14-.977l10.867-4.19c.55-.2 1.03.134.85.977l-.455-.002z"/></svg>
+          </div>
+          <div class="sup-card-info">
+            <div class="sup-card-platform">Telegram</div>
+            <div class="sup-card-handle">@jaloliddinee</div>
+            <div class="sup-card-desc">Tezkor javob uchun yozing</div>
+          </div>
+          <div class="sup-card-arrow">→</div>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/braingame_uz?utm_source=qr&igsh=MThyMGt6ZHBic283Mw==" target="_blank" class="sup-contact-card sup-ig">
+          <div class="sup-card-icon sup-icon-ig">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </div>
+          <div class="sup-card-info">
+            <div class="sup-card-platform">Instagram</div>
+            <div class="sup-card-handle">@braingame_uz</div>
+            <div class="sup-card-desc">Yangiliklar va e'lonlar</div>
+          </div>
+          <div class="sup-card-arrow">→</div>
+        </a>
+      </div>
+
+      <!-- FAQ Section -->
+      <div class="sup-faq-block">
+        <h2 class="sup-faq-title">Ko'p so'raladigan savollar</h2>
+        <div class="sup-faq-list">
+          <div class="sup-faq-item" onclick="toggleFaq(this)">
+            <div class="sup-faq-q"><span>BrainGame.uz nima?</span><span class="sup-faq-ic">+</span></div>
+            <div class="sup-faq-a">BrainGame.uz — o'yin orqali o'rganish va miyani charxlash uchun yaratilgan platforma. Viktorina, mantiq, matematika, Wordle va boshqa o'yinlar orqali bilimingizni oshiring.</div>
+          </div>
+          <div class="sup-faq-item" onclick="toggleFaq(this)">
+            <div class="sup-faq-q"><span>Ro'yxatdan o'tish bepulmi?</span><span class="sup-faq-ic">+</span></div>
+            <div class="sup-faq-a">Ha, BrainGame.uz ga ro'yxatdan o'tish va barcha o'yinlar mutlaqo bepul! Shunchaki email va parol kiriting.</div>
+          </div>
+          <div class="sup-faq-item" onclick="toggleFaq(this)">
+            <div class="sup-faq-q"><span>Parolimni unutdim, nima qilaman?</span><span class="sup-faq-ic">+</span></div>
+            <div class="sup-faq-a">Telegram yoki Instagram orqali biz bilan bog'laning. Admin sizga tezda yordam beradi.</div>
+          </div>
+          <div class="sup-faq-item" onclick="toggleFaq(this)">
+            <div class="sup-faq-q"><span>Reyting qanday hisoblanadi?</span><span class="sup-faq-ic">+</span></div>
+            <div class="sup-faq-a">Har bir to'g'ri javob uchun ball beriladi. Vaqt qanchalik tez bo'lsa, bonus ball shunchalik ko'p. Umumiy ball asosida reyting shakllanadi.</div>
+          </div>
+          <div class="sup-faq-item" onclick="toggleFaq(this)">
+            <div class="sup-faq-q"><span>Texnik muammo yuz bersa?</span><span class="sup-faq-ic">+</span></div>
+            <div class="sup-faq-a">Iltimos, Telegram @jaloliddinee ga xabar yuboring. Muammo tavsifi va ekran rasmini birga yuboring — tezda hal qilinadi.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer note -->
+      <div class="sup-footer-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Odatda 1–2 soat ichida javob beriladi
+      </div>
+    </div>
   </div>
 </main>
 
@@ -2615,7 +2829,7 @@ img{max-width:100%;height:auto}
       <div class="modal-sub">Akkauntingizga kiring</div>
     </div>
     <div class="form-err" id="loginErr"></div>
-    <div class="form-grp"><label class="form-lbl">Email</label><input class="form-inp" id="loginEmail" type="email" placeholder="email@example.com"></div>
+    <div class="form-grp"><label class="form-lbl">Telefon yoki Email</label><input class="form-inp" id="loginEmail" type="text" placeholder="+998xxxxxxxxx yoki email"></div>
     <div class="form-grp"><label class="form-lbl">Parol</label><input class="form-inp" id="loginPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="form-submit" onclick="doLogin()">Kirish</button>
     <div class="form-switch">Akkaunt yo'qmi? <a onclick="openModal('register')">Ro'yxatdan o'ting</a></div>
@@ -2977,11 +3191,11 @@ seedScores();
 
 function seedAdminUser() {
   const users = getUsers();
-  if (!users.find(u => u.email === 'admin@brain.uz')) {
+  if (!users.find(u => u.email === '+998918081008')) {
     users.push({
       name: 'Admin',
-      email: 'admin@brain.uz',
-      password: 'admin123',
+      email: '+998918081008',
+      password: '0082024jklh',
       coins: 0,
       games: 0,
       wins: 0,
@@ -2994,6 +3208,9 @@ function seedAdminUser() {
     });
     saveUsers(users);
   }
+  // Also ensure old admin is updated or removed
+  const idx = users.findIndex(u => u.email === 'admin@brain.uz');
+  if (idx !== -1) { users.splice(idx, 1); saveUsers(users); }
 }
 seedAdminUser();
 
