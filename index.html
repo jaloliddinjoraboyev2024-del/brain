@@ -1,0 +1,4290 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BrainGame.uz — Miyya charxlovchi ta'limiy o'yinlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #2563eb;
+  --brand-dark: #1d4ed8;
+  --brand-light: #eff6ff;
+  --brand-mid: #bfdbfe;
+  --accent: #f97316;
+  --accent-soft: #fff7ed;
+  --green: #059669;
+  --green-soft: #d1fae5;
+  --purple: #7c3aed;
+  --purple-soft: #ede9fe;
+  --gold: #d97706;
+  --gold-soft: #fef3c7;
+  --rose: #e11d48;
+  --rose-soft: #fff1f2;
+  --cyan: #0891b2;
+  --cyan-soft: #ecfeff;
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --text: #0f172a;
+  --text2: #334155;
+  --muted: #64748b;
+  --nav-w: 264px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.06);
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;outline:none}
+input{font-family:inherit;outline:none}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;height:auto}
+::selection{background:var(--brand);color:#fff}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* Hamburger */
+.hamburger{
+  display:none;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface);
+  cursor:pointer;color:var(--text2);flex-shrink:0;transition:var(--transition);
+}
+.hamburger:hover{background:var(--surface2)}
+.hamburger svg{width:18px;height:18px}
+
+/* Sidebar Overlay */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:199;
+  backdrop-filter:blur(4px);transition:opacity 0.3s;
+}
+.sidebar-overlay.open{display:block}
+
+/* Sidebar */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;
+  width:var(--nav-w);background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  z-index:200;transition:transform 0.3s ease;
+  box-shadow:0 0 30px rgba(0,0,0,0.05);
+}
+.sidebar-logo{
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.logo-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#2563eb,#0ea5e9);
+  display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;
+}
+.logo-mark svg{width:20px;height:20px;color:#fff}
+.logo-name{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:800;color:var(--text);
+}
+.logo-name span{color:var(--brand)}
+
+.sidebar-nav{
+  flex:1;overflow-y:auto;
+  padding:14px 10px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.nav-label{
+  font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);padding:10px 10px 5px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:9px;
+  color:var(--muted);font-size:13.5px;font-weight:500;
+  cursor:pointer;transition:var(--transition);
+  border:1px solid transparent;position:relative;
+}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{
+  background:var(--brand-light);
+  color:var(--brand);
+  border-color:rgba(37,99,235,.12);
+  font-weight:600;
+}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{
+  margin-left:auto;font-size:9px;font-weight:800;
+  letter-spacing:.04em;padding:2px 7px;border-radius:5px;
+}
+.nav-badge.new{background:var(--green-soft);color:var(--green)}
+.nav-badge.pro{
+  background:linear-gradient(135deg,#f59e0b,#ef4444);
+  color:#fff;
+}
+.nav-divider{height:1px;background:var(--border);margin:8px 4px}
+
+.sidebar-footer{
+  padding:14px 10px;
+  border-top:1px solid var(--border);
+}
+.user-card{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  cursor:pointer;transition:var(--transition);
+}
+.user-card:hover{border-color:var(--brand-mid)}
+.user-av{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  display:flex;align-items:center;
+  justify-content:center;
+  font-size:13px;font-weight:800;
+  color:#fff;flex-shrink:0;
+}
+.user-name{font-size:13px;font-weight:700;color:var(--text)}
+.user-email{font-size:11px;color:var(--muted)}
+.sidebar-auth{display:flex;flex-direction:column;gap:7px}
+.btn-login,.btn-register{
+  display:flex;align-items:center;justify-content:center;
+  gap:7px;padding:9px;border-radius:9px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:var(--transition);
+}
+.btn-login{
+  border:1px solid var(--border);
+  color:var(--text);
+}
+.btn-login:hover{background:var(--surface2)}
+.btn-register{
+  background:var(--brand);color:#fff;
+  box-shadow:0 4px 12px rgba(37,99,235,.28);
+}
+.btn-register:hover{
+  background:var(--brand-dark);
+  transform:translateY(-1px);
+}
+
+/* Main */
+.main{
+  margin-left:var(--nav-w);
+  min-height:100vh;
+  transition:margin 0.3s ease;
+}
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:54px;display:flex;align-items:center;
+  padding:0 24px;justify-content:space-between;
+}
+.breadcrumb{
+  font-size:13px;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.breadcrumb span{color:var(--text);font-weight:600}
+.breadcrumb svg{width:14px;height:14px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:8px;
+  background:var(--gold-soft);
+  border:1px solid rgba(217,119,6,.2);
+  color:var(--gold);font-size:12px;font-weight:700;
+}
+.topbar-btn{
+  width:34px;height:34px;border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  display:flex;align-items:center;
+  justify-content:center;
+  cursor:pointer;color:var(--muted);
+  transition:var(--transition);
+}
+.topbar-btn:hover{background:var(--surface2);color:var(--text)}
+.topbar-btn svg{width:16px;height:16px}
+
+.admin-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.admin-filters{display:flex;gap:10px;flex-wrap:wrap}
+.filter-btn{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition)}
+.filter-btn.active{background:var(--brand);color:#fff;border-color:transparent;}
+.filter-btn:hover{background:var(--surface);}
+
+/* Content */
+.content{padding:28px 24px 60px;max-width:1080px}
+.page{display:none;animation:fadeIn 0.3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Hero */
+.hero{
+  background:linear-gradient(135deg,#0c1a6b 0%,#1e3a8a 45%,#0369a1 100%);
+  border-radius:var(--radius-lg);padding:44px 40px;
+  display:grid;grid-template-columns:1fr 320px;
+  gap:36px;align-items:center;
+  position:relative;overflow:hidden;margin-bottom:24px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,.05) 0%, transparent 40%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,.03);pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  color:#93c5fd;font-size:11px;font-weight:700;
+  padding:5px 12px;border-radius:999px;
+  margin-bottom:16px;letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.hero-badge svg{width:13px;height:13px}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(24px,3vw,38px);
+  font-weight:800;line-height:1.15;
+  color:#fff;margin-bottom:14px;
+}
+.hero h1 em{font-style:normal;color:#60a5fa}
+.hero-text{
+  color:rgba(255,255,255,.72);
+  font-size:14px;line-height:1.65;
+  margin-bottom:24px;
+}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-white{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#fff;color:var(--brand);font-weight:700;
+  font-size:13.5px;padding:11px 22px;border-radius:9px;
+  cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15);
+  transition:var(--transition);
+}
+.btn-white:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 22px rgba(0,0,0,.2);
+}
+.btn-white svg{width:15px;height:15px}
+.btn-outline-white{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.1);color:#fff;
+  font-weight:600;font-size:13.5px;
+  padding:11px 22px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;transition:var(--transition);
+}
+.btn-outline-white:hover{background:rgba(255,255,255,.18)}
+.hero-right{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.hero-mini-card{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;padding:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-mini-icon{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;
+}
+.hero-mini-icon svg{width:20px;height:20px}
+.hero-mini-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.hero-mini-desc{font-size:11px;color:rgba(255,255,255,.55)}
+
+/* Stats */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:24px;
+}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 16px;
+  box-shadow:var(--shadow);transition:transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover{transform:translateY(-6px) translateZ(4px);box-shadow:0 16px 40px rgba(0,0,0,.16)}
+.card-3d{
+  background:rgba(15,23,42,.95);border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+  color:#e2e8f0;backdrop-filter:blur(16px);
+}
+.card-3d .stat-icon{background:rgba(255,255,255,.06);border-radius:14px;color:inherit}
+.card-3d .stat-num{color:#fff}
+.card-3d .stat-lbl{color:rgba(226,232,240,.7)}
+.card-3d:hover{transform:translateY(-8px) translateZ(4px);box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.admin-stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px}
+.admin-chart-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;align-items:start}
+.admin-chart-card{
+  min-height:320px;position:relative;overflow:hidden;
+}
+.admin-chart-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top left, rgba(56,189,248,.12), transparent 35%),
+              radial-gradient(circle at bottom right, rgba(168,85,247,.1), transparent 30%);
+  pointer-events:none;
+}
+#mainChart{
+  display:none;
+}
+.chart-container{
+  position:relative;
+  width:100%;
+  height:380px;
+}
+#adminStatsCanvas{
+  width:100% !important;
+  height:100% !important;
+}
+.admin-chart-card .sec-hdr{margin-bottom:18px}
+.chart-sparkline{
+  width:100%;min-height:240px;border-radius:18px;
+  background:linear-gradient(180deg,rgba(15,23,42,.78),rgba(15,23,42,.95));
+  position:relative;overflow:hidden;padding:22px 18px 18px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+}
+.chart-sparkline::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 55%);
+  pointer-events:none;
+}
+.chart-day{
+  position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;
+  min-width:44px;
+}
+.chart-group{
+  position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center;gap:6px;
+  width:100%;padding-bottom:8px;
+}
+.chart-series{
+  display:block;width:22%;border-radius:16px 16px 6px 6px;
+  box-shadow:0 10px 20px rgba(0,0,0,.16);
+}
+.chart-series--views{background:linear-gradient(180deg,#38bdf8,#0ea5e9);}
+.chart-series--sessions{background:linear-gradient(180deg,#a855f7,#7c3aed);}
+.chart-series--new{background:linear-gradient(180deg,#facc15,#f59e0b);}
+.chart-label{
+  color:rgba(226,232,240,.72);font-size:12px;text-align:center;
+}
+.chart-meta{
+  display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(226,232,240,.65);
+}
+.chart-meta strong{color:#fff;}
+.chart-meta small{color:rgba(226,232,240,.55);}
+.admin-activity-summary{
+  display:flex;justify-content:space-between;gap:14px;margin-top:18px;
+}
+.chart-legend{
+  display:flex;justify-content:flex-start;gap:18px;margin-top:16px;font-size:13px;color:rgba(226,232,240,.75);
+}
+.chart-legend div{
+  display:flex;align-items:center;gap:8px;
+}
+.legend-swatch{
+  width:12px;height:12px;border-radius:4px;display:inline-block;
+}
+.legend-swatch--views{background:linear-gradient(180deg,#38bdf8,#0ea5e9);}
+.legend-swatch--sessions{background:linear-gradient(180deg,#a855f7,#7c3aed);}
+.legend-swatch--new{background:linear-gradient(180deg,#facc15,#f59e0b);}
+.admin-activity-summary > div{
+  flex:1;min-width:0;text-align:center;padding:14px 12px;border-radius:16px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+}
+.admin-activity-summary strong{display:block;font-size:20px;color:#fff;margin-bottom:4px;}
+.admin-activity-summary div div{font-size:12px;color:rgba(226,232,240,.7);}
+.admin-detail-card{display:grid;gap:16px}
+.admin-detail-card .board-row{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);}
+.admin-detail-card .board-row.hdr{background:rgba(255,255,255,.06)}
+#page-admin .sec{background:rgba(8,18,40,.95);border-color:rgba(255,255,255,.08);box-shadow:0 24px 80px rgba(0,0,0,.25)}
+#page-admin .sec-badge{background:rgba(56,189,248,.12);color:#38bdf8}
+#page-admin .sec-title{color:#f8fafc}
+#page-admin .sec-desc{color:rgba(226,232,240,.7)}
+#page-admin .board-row{border-color:rgba(255,255,255,.08)}
+#page-admin .b-rank{color:#fff}
+#page-admin .b-player .b-name{color:#f8fafc}
+#page-admin .b-score, #page-admin .b-games{color:rgba(226,232,240,.9)}
+
+/* ═══════════════════════════════════════
+   KARVO ADMIN DASHBOARD – Screenshot Style
+═══════════════════════════════════════ */
+#page-admin { background: transparent; }
+
+/* ── Header bar ── */
+.karvo-adm-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  margin-bottom: 18px;
+}
+.karvo-adm-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px; font-weight: 700; color: #e2e8f0; margin: 0;
+}
+.karvo-adm-sub { font-size: 12px; color: #64748b; margin-top: 3px; }
+.karvo-period-btns {
+  display: flex; gap: 2px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(56,189,248,0.18);
+  border-radius: 10px; padding: 4px;
+}
+.karvo-pbtn {
+  padding: 7px 18px; border-radius: 7px;
+  font-size: 13px; font-weight: 700; color: #64748b;
+  cursor: pointer; border: none; background: none;
+  transition: all 0.18s;
+}
+.karvo-pbtn:hover { color: #cbd5e1; }
+.karvo-pbtn.active {
+  background: rgba(14,165,233,0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.3);
+}
+
+/* ── 2-column top row ── */
+.karvo-top-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-bottom: 14px;
+}
+@media (max-width: 640px) { .karvo-top-row { grid-template-columns: 1fr; } }
+
+/* ── Big metric card ── */
+.karvo-big-card {
+  border-radius: 16px;
+  border: 1px solid rgba(56,189,248,0.14);
+  background: linear-gradient(165deg, rgba(10,18,40,0.98) 0%, rgba(8,25,55,0.98) 100%);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(56,189,248,0.06);
+  padding: 20px 22px 0 22px;
+  overflow: hidden; position: relative;
+}
+.karvo-big-meta {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.karvo-big-lbl {
+  font-size: 13px; font-weight: 600; color: #94a3b8; letter-spacing: .02em;
+}
+.karvo-badge-up {
+  font-size: 11px; font-weight: 800; color: #4ade80;
+  background: rgba(74,222,128,0.12);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 999px; padding: 2px 9px;
+}
+.karvo-big-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 34px; font-weight: 900; color: #f0f6ff;
+  letter-spacing: -0.02em; line-height: 1;
+  margin-bottom: 5px;
+}
+.karvo-big-sub { font-size: 11.5px; color: #475569; margin-bottom: 14px; }
+
+/* ── Area chart wrapper inside big card ── */
+.karvo-area-wrap {
+  position: relative; height: 110px;
+  margin: 0 -22px;
+}
+.karvo-area-wrap canvas { width: 100% !important; height: 100% !important; }
+
+/* ── Savdo / Score full-width card ── */
+.karvo-savdo-card {
+  border-radius: 16px;
+  border: 1px solid rgba(56,189,248,0.14);
+  background: linear-gradient(165deg, rgba(10,18,40,0.98) 0%, rgba(8,25,55,0.98) 100%);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(56,189,248,0.06);
+  padding: 20px 22px 0 22px;
+  overflow: hidden; position: relative;
+  margin-bottom: 14px;
+}
+.karvo-savdo-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.karvo-savdo-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 38px; font-weight: 900; color: #f0f6ff;
+  letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px;
+}
+.karvo-savdo-area { position: relative; height: 200px; margin: 0 -22px; }
+.karvo-savdo-area canvas { width: 100% !important; height: 100% !important; }
+
+/* ── Bottom 4-stat row ── */
+.karvo-stat4-row {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 12px; margin-bottom: 10px;
+}
+@media (max-width: 640px) { .karvo-stat4-row { grid-template-columns: repeat(2,1fr); } }
+.karvo-stat4 {
+  border-radius: 14px;
+  border: 1px solid rgba(56,189,248,0.12);
+  background: linear-gradient(165deg, rgba(10,18,40,0.97) 0%, rgba(8,22,48,0.97) 100%);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  padding: 16px 14px; text-align: center;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.karvo-stat4:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+.karvo-stat4-icon { font-size: 22px; margin-bottom: 6px; }
+.karvo-stat4-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 900; color: #e2e8f0;
+  letter-spacing: -0.01em;
+}
+.karvo-stat4-lbl { font-size: 11px; color: #475569; font-weight: 600; margin-top: 2px; }
+
+/* Header */
+.adm-header-wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(15,23,42,0.97) 0%, rgba(15,30,60,0.97) 100%);
+  border: 1px solid rgba(56,189,248,0.15);
+  border-radius: 18px; padding: 20px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.adm-header-left { display: flex; align-items: center; gap: 14px; }
+.adm-avatar {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900; color: #fff;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+  flex-shrink: 0;
+}
+.adm-welcome { font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: #38bdf8; margin-bottom: 3px; }
+.adm-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+  color: #f8fafc; line-height: 1.2; }
+.adm-name span { color: #60a5fa; }
+.adm-date { font-size: 12px; color: #64748b; margin-top: 2px; }
+.adm-period-pills {
+  display: flex; gap: 6px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 5px;
+}
+.adm-pill {
+  padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 700;
+  color: #64748b; cursor: pointer; transition: all 0.2s; border: none; background: none;
+}
+.adm-pill:hover { color: #e2e8f0; background: rgba(255,255,255,0.06); }
+.adm-pill.active {
+  background: linear-gradient(135deg, #2563eb, #0ea5e9);
+  color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+}
+
+/* KPI Grid */
+.adm-kpi-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 14px; margin-bottom: 18px;
+}
+@media (max-width: 1000px) { .adm-kpi-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 640px) { .adm-kpi-grid { grid-template-columns: repeat(2,1fr); } }
+
+.adm-kpi-card {
+  border-radius: 16px; padding: 18px 16px 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(15,23,42,0.95);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.adm-kpi-card:hover {
+  transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+}
+.adm-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.adm-kpi-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.adm-kpi-icon-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.adm-kpi-icon-amber { background: rgba(234,179,8,0.15); color: #fbbf24; }
+.adm-kpi-icon-green { background: rgba(16,185,129,0.15); color: #34d399; }
+.adm-kpi-icon-pink { background: rgba(236,72,153,0.15); color: #f472b6; }
+.adm-kpi-icon-cyan { background: rgba(6,182,212,0.15); color: #22d3ee; }
+.adm-kpi-badge {
+  font-size: 11px; font-weight: 800; padding: 3px 9px;
+  border-radius: 999px; letter-spacing: .03em;
+}
+.adm-kpi-up { background: rgba(74,222,128,0.12); color: #4ade80; }
+.adm-kpi-new { background: rgba(56,189,248,0.12); color: #38bdf8; }
+.adm-kpi-num {
+  font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 900;
+  color: #f8fafc; margin-bottom: 2px; letter-spacing: -0.02em;
+}
+.adm-kpi-lbl { font-size: 11.5px; color: #64748b; font-weight: 600; margin-bottom: 10px; }
+.adm-kpi-bar {
+  height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden;
+}
+.adm-kpi-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.adm-fill-blue { background: linear-gradient(90deg, #2563eb, #38bdf8); }
+.adm-fill-amber { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.adm-fill-green { background: linear-gradient(90deg, #059669, #34d399); }
+.adm-fill-pink { background: linear-gradient(90deg, #e11d48, #f472b6); }
+.adm-fill-cyan { background: linear-gradient(90deg, #0891b2, #22d3ee); }
+
+/* Charts Row */
+.adm-charts-row {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 14px; margin-bottom: 18px;
+}
+@media (max-width: 768px) { .adm-charts-row { grid-template-columns: 1fr; } }
+
+.adm-chart-main, .adm-chart-side {
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 22px 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+}
+.adm-chart-hdr {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+.adm-chart-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #f8fafc; }
+.adm-chart-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+.adm-chart-legend {
+  display: flex; align-items: center; gap: 12px; font-size: 11.5px; color: #94a3b8; font-weight: 600;
+}
+.adm-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 3px; }
+
+/* Donut */
+.adm-donut-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+.adm-donut-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 900; color: #f8fafc; }
+.adm-donut-lbl { font-size: 11px; color: #64748b; font-weight: 600; }
+.adm-donut-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.adm-donut-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: #94a3b8; font-weight: 600;
+}
+.adm-donut-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.adm-donut-val { margin-left: auto; color: #e2e8f0; font-weight: 700; }
+
+/* Live badge */
+.adm-live-badge {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; color: #4ade80;
+  background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 999px; padding: 3px 10px;
+}
+.adm-live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #4ade80;
+  animation: admPulse 1.4s ease infinite;
+}
+@keyframes admPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* Bottom Row */
+.adm-bottom-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 768px) { .adm-bottom-row { grid-template-columns: 1fr; } }
+
+.adm-activity-card, .adm-top-card {
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 22px 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+}
+.adm-activity-list { display: flex; flex-direction: column; gap: 10px; }
+.adm-act-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.15s;
+}
+.adm-act-item:hover { background: rgba(255,255,255,0.06); }
+.adm-act-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.adm-act-info { flex: 1; min-width: 0; }
+.adm-act-title { font-size: 13px; font-weight: 700; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-act-time { font-size: 11px; color: #475569; margin-top: 2px; }
+.adm-act-val { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; color: #60a5fa; }
+
+/* Top Players */
+.adm-top-list { display: flex; flex-direction: column; gap: 8px; }
+.adm-top-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.adm-top-rank {
+  width: 26px; height: 26px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.adm-top-rank-1 { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.adm-top-rank-2 { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.adm-top-rank-3 { background: rgba(205,127,50,0.15); color: #cd7f32; }
+.adm-top-rank-n { background: rgba(255,255,255,0.06); color: #475569; }
+.adm-top-av {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.adm-top-name { flex: 1; font-size: 13px; font-weight: 700; color: #e2e8f0; }
+.adm-top-score { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800; color: #fbbf24; }
+
+/* Animated counter */
+@keyframes admCountUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.adm-kpi-num { animation: admCountUp 0.5s ease; }
+.stat-icon{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;
+}
+.stat-icon svg{width:18px;height:18px}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:24px;font-weight:800;color:var(--text);
+}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* Sections */
+.sec{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:24px;
+  box-shadow:var(--shadow);margin-bottom:20px;
+}
+.sec-hdr{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;margin-bottom:18px;
+  flex-wrap:wrap;gap:12px;
+}
+.sec-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10.5px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  padding:4px 11px;border-radius:999px;margin-bottom:6px;
+}
+.sec-badge svg{width:12px;height:12px}
+.sec-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(18px,2vw,22px);
+  font-weight:800;color:var(--text);
+}
+.sec-desc{font-size:13px;color:var(--muted);margin-top:3px}
+.see-all-btn{
+  display:flex;align-items:center;gap:4px;
+  font-size:12.5px;font-weight:600;color:var(--brand);
+  white-space:nowrap;cursor:pointer;
+  padding:6px 12px;border-radius:7px;
+  transition:background 0.15s;
+}
+.see-all-btn:hover{background:var(--brand-light)}
+
+/* Subjects Grid */
+.subjects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;
+}
+.subj-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 12px;
+  cursor:pointer;transition:var(--transition);
+}
+.subj-card:hover{
+  border-color:rgba(37,99,235,.28);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(37,99,235,.08);
+}
+.subj-icon{
+  width:36px;height:36px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:9px;
+}
+.subj-icon svg{width:18px;height:18px}
+.subj-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.subj-count{font-size:11px;color:var(--muted)}
+
+/* Games Grid */
+.games-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.game-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;
+  transition:var(--transition);cursor:pointer;position:relative;
+}
+.game-card:hover{
+  border-color:rgba(37,99,235,.25);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+}
+.game-card.featured{
+  grid-column:span 2;
+  background:linear-gradient(135deg,rgba(37,99,235,.05),rgba(14,165,233,.05));
+  border-color:rgba(37,99,235,.15);
+}
+.game-icon{
+  width:42px;height:42px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;
+}
+.game-icon svg{width:20px;height:20px}
+.gtype-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:999px;
+  font-size:10px;font-weight:700;margin-bottom:7px;
+  width:fit-content;
+}
+.game-card h3{font-size:14px;font-weight:700;margin-bottom:5px}
+.game-card p{font-size:12px;color:var(--muted);line-height:1.55}
+.game-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.gtag{
+  font-size:10px;font-weight:600;
+  padding:3px 8px;border-radius:5px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--muted);
+}
+.play-overlay{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.8);transition:var(--transition);
+}
+.game-card:hover .play-overlay{
+  opacity:1;transform:scale(1);
+}
+.play-overlay svg{width:13px;height:13px}
+
+/* Game Arena */
+.game-arena{display:none}
+.game-arena.active{display:block;animation:fadeIn 0.3s ease}
+.arena-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:22px;flex-wrap:wrap;
+}
+.back-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--muted);font-size:13px;font-weight:600;
+  cursor:pointer;transition:var(--transition);
+}
+.back-btn:hover{background:var(--surface2);color:var(--text)}
+.back-btn svg{width:15px;height:15px}
+.arena-title{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;color:var(--text);
+}
+.arena-badge{
+  font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:6px;
+}
+
+/* QUIZ */
+.quiz-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:32px;
+  max-width:680px;margin:0 auto;box-shadow:var(--shadow);
+}
+.quiz-topbar{
+  display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:22px;
+  flex-wrap:wrap;gap:10px;
+}
+.quiz-prog-wrap{margin-bottom:22px}
+.quiz-prog-bar{
+  height:6px;background:var(--surface2);
+  border-radius:3px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.quiz-prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--brand),#0ea5e9);
+  border-radius:3px;transition:width 0.5s ease;
+}
+.quiz-num{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:6px}
+.quiz-score-pill,.quiz-timer-pill,.quiz-subj-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:8px;
+  font-size:12.5px;font-weight:700;
+}
+.quiz-score-pill{
+  background:var(--gold-soft);
+  border:1px solid rgba(217,119,6,.15);
+  color:var(--gold);
+}
+.quiz-timer-pill{
+  background:var(--rose-soft);
+  border:1px solid rgba(225,29,72,.12);
+  color:var(--rose);font-size:13px;
+}
+.quiz-subj-pill{
+  padding:4px 10px;border-radius:7px;
+  font-size:11px;font-weight:700;margin-bottom:10px;
+}
+.quiz-q{
+  font-size:19px;font-weight:700;color:var(--text);
+  line-height:1.42;margin-bottom:24px;
+}
+.quiz-opts{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.quiz-opt{
+  padding:14px 16px;border-radius:11px;
+  border:1.5px solid var(--border);
+  background:var(--surface2);color:var(--text2);
+  font-size:13.5px;font-weight:600;text-align:left;
+  cursor:pointer;transition:var(--transition);
+  display:flex;align-items:center;gap:10px;
+}
+.quiz-opt:hover:not(:disabled){
+  border-color:rgba(37,99,235,.4);
+  background:var(--brand-light);color:var(--brand);
+}
+.quiz-opt.correct{
+  background:#d1fae5;border-color:#059669;color:#065f46;
+}
+.quiz-opt.wrong{
+  background:#fff1f2;border-color:#e11d48;color:#9f1239;
+}
+.quiz-opt:disabled{cursor:not-allowed}
+.opt-letter{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--border);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;flex-shrink:0;
+}
+.quiz-fb{
+  margin-top:16px;padding:13px 16px;
+  border-radius:10px;font-size:13px;font-weight:600;
+  display:none;align-items:center;gap:8px;line-height:1.5;
+}
+.quiz-fb.show{display:flex}
+.quiz-fb.ok{background:var(--green-soft);border:1px solid rgba(5,150,105,.2);color:#065f46}
+.quiz-fb.no{background:var(--rose-soft);border:1px solid rgba(225,29,72,.15);color:#9f1239}
+.quiz-next-btn{
+  margin-top:16px;width:100%;padding:13px;
+  border-radius:10px;background:var(--brand);
+  color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:var(--transition);
+  display:none;box-shadow:0 4px 12px rgba(37,99,235,.28);
+}
+.quiz-next-btn:hover{background:var(--brand-dark)}
+.quiz-next-btn.show{display:block}
+
+/* Memory */
+.memory-wrap{max-width:520px;margin:0 auto}
+.mem-hdr{
+  display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:18px;
+  flex-wrap:wrap;gap:8px;
+}
+.mem-pills{display:flex;gap:8px;flex-wrap:wrap}
+.mem-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:12.5px;font-weight:700;color:var(--text2);
+}
+.mem-pill svg{width:13px;height:13px;color:var(--muted)}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mem-card{
+  aspect-ratio:1;border-radius:11px;cursor:pointer;
+  background:var(--surface2);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.mem-card:hover:not(.flipped):not(.matched){
+  border-color:rgba(37,99,235,.3);
+  transform:scale(1.04);
+  box-shadow:0 4px 12px rgba(37,99,235,.1);
+}
+.mem-card.flipped{
+  background:var(--brand-light);
+  border-color:rgba(37,99,235,.3);
+}
+.mem-card.matched{
+  background:#d1fae5;border-color:#059669;
+  cursor:default;animation:matchPulse 0.5s ease;
+}
+@keyframes matchPulse{
+  0%,100%{transform:scale(1)}50%{transform:scale(1.08)}
+}
+.mem-back,.mem-front{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.mem-front{display:none}
+.mem-card.flipped .mem-front,
+.mem-card.matched .mem-front{display:flex}
+.mem-card.flipped .mem-back,
+.mem-card.matched .mem-back{display:none}
+.mem-svg{width:26px;height:26px}
+.mem-restart{
+  margin-top:14px;width:100%;padding:11px;
+  border-radius:10px;background:var(--surface2);
+  border:1.5px solid var(--border);color:var(--text2);
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:var(--transition);
+}
+.mem-restart:hover{
+  background:var(--brand-light);
+  border-color:rgba(37,99,235,.25);
+  color:var(--brand);
+}
+
+/* Rope Game */
+.rope-wrap{max-width:100%;margin:0 auto}
+.rope-game-board{
+  display:grid;grid-template-columns:1fr 220px 1fr;
+  gap:10px;align-items:start;min-height:480px;
+}
+.rope-panel{
+  border-radius:16px;border:2px solid;
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+  animation:slideIn 0.3s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.rope-panel.blue{
+  background:linear-gradient(160deg,rgba(37,99,235,.07),rgba(59,130,246,.03));
+  border-color:rgba(37,99,235,.25);
+}
+.rope-panel.red{
+  background:linear-gradient(160deg,rgba(225,29,72,.07),rgba(244,63,94,.03));
+  border-color:rgba(225,29,72,.2);
+}
+.rope-panel-header{
+  display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:4px;
+}
+.rope-team-name{
+  font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.rope-panel.blue .rope-team-name{color:var(--brand)}
+.rope-panel.red .rope-team-name{color:var(--rose)}
+.rope-team-score{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:900;line-height:1;
+  padding:6px 14px;border-radius:10px;
+}
+.rope-panel.blue .rope-team-score{
+  background:rgba(37,99,235,.1);color:var(--brand);
+}
+.rope-panel.red .rope-team-score{
+  background:rgba(225,29,72,.1);color:var(--rose);
+}
+.rope-q-display{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px;font-size:14px;
+  font-weight:700;color:var(--text);line-height:1.5;
+  min-height:70px;display:flex;align-items:center;
+}
+.rope-opts{display:flex;flex-direction:column;gap:7px}
+.rope-opt{
+  padding:11px 12px;border-radius:10px;
+  border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text2);
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:var(--transition);text-align:left;
+  display:flex;align-items:center;gap:8px;width:100%;
+}
+.rope-panel.blue .rope-opt:hover:not(:disabled){
+  border-color:rgba(37,99,235,.4);
+  background:var(--brand-light);color:var(--brand);
+}
+.rope-panel.red .rope-opt:hover:not(:disabled){
+  border-color:rgba(225,29,72,.35);
+  background:var(--rose-soft);color:var(--rose);
+}
+.opt-key{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--border);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;flex-shrink:0;
+}
+.rope-opt.panel-correct{
+  background:var(--green-soft)!important;
+  border-color:var(--green)!important;
+  color:#065f46!important;
+}
+.rope-opt.panel-wrong{
+  background:var(--rose-soft)!important;
+  border-color:var(--rose)!important;
+  color:#9f1239!important;
+}
+.rope-opt:disabled{cursor:not-allowed;opacity:.6}
+.rope-answered-badge{
+  font-size:12px;font-weight:700;
+  padding:6px 10px;border-radius:8px;
+  text-align:center;display:none;
+}
+.rope-answered-badge.show{display:block}
+.rope-answered-badge.ok{background:var(--green-soft);color:#065f46}
+.rope-answered-badge.no{background:var(--rose-soft);color:#9f1239}
+
+/* Rope Center */
+.rope-center{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rope-timer-bar{
+  height:3px;background:var(--border);
+  border-radius:2px;overflow:hidden;width:100%;
+  margin-bottom:6px;
+}
+.rope-timer-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--brand),#0ea5e9);
+  transition:width 0.1s linear;
+}
+.rope-timer-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:6px 10px;
+  font-family:'Syne',sans-serif;font-size:18px;
+  font-weight:800;color:var(--text);
+  text-align:center;width:100%;
+}
+.rope-bar-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px;width:100%;
+  box-shadow:var(--shadow);
+}
+.rope-bar{
+  height:18px;border-radius:9px;
+  background:var(--surface2);border:1px solid var(--border);
+  position:relative;overflow:hidden;margin-bottom:6px;
+}
+.rb-blue{
+  position:absolute;left:0;top:0;bottom:0;
+  background:linear-gradient(90deg,#1d4ed8,#3b82f6);
+  border-radius:9px;
+  transition:width 0.5s cubic-bezier(.34,1.56,.64,1);
+}
+.rb-red{
+  position:absolute;right:0;top:0;bottom:0;
+  background:linear-gradient(270deg,#be123c,#f43f5e);
+  border-radius:9px;
+  transition:width 0.5s cubic-bezier(.34,1.56,.64,1);
+}
+.rb-dot{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid #0f172a;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
+  transition:left 0.5s cubic-bezier(.34,1.56,.64,1);
+  z-index:2;
+}
+.rope-status-txt{
+  font-size:11px;font-weight:600;
+  color:var(--muted);text-align:center;
+}
+.rope-q-num-badge{
+  font-size:11px;font-weight:700;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:3px 10px;
+  color:var(--muted);text-align:center;width:100%;
+}
+
+/* Wordle */
+.wordle-wrap{max-width:480px;margin:0 auto}
+.wordle-hdr{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:16px;
+  flex-wrap:wrap;gap:8px;
+}
+.wordle-board{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.wordle-row{display:flex;gap:6px;justify-content:center}
+.wordle-cell{
+  width:52px;height:52px;border-radius:8px;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:20px;
+  font-weight:800;color:var(--text);
+  background:var(--surface);transition:var(--transition);
+}
+.wordle-cell.filled{
+  border-color:var(--brand-mid);
+  background:var(--brand-light);
+  color:var(--brand);
+}
+.wordle-cell.correct{background:#059669;border-color:#059669;color:#fff;animation:flipIn 0.5s ease}
+.wordle-cell.present{background:#d97706;border-color:#d97706;color:#fff;animation:flipIn 0.5s ease 0.15s}
+.wordle-cell.absent{background:#64748b;border-color:#64748b;color:#fff;animation:flipIn 0.5s ease 0.3s}
+@keyframes flipIn{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+.wordle-cell.active{border-color:var(--brand);animation:pulse 0.5s ease}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.wordle-keyboard{display:flex;flex-direction:column;gap:5px;align-items:center}
+.wk-row{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.wk-key{
+  min-width:32px;height:42px;padding:0 6px;
+  border-radius:7px;background:var(--surface2);
+  border:1.5px solid var(--border);color:var(--text);
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.wk-key:hover{background:var(--brand-light);border-color:rgba(37,99,235,.3);color:var(--brand)}
+.wk-key.correct{background:#059669;border-color:#059669;color:#fff}
+.wk-key.present{background:#d97706;border-color:#d97706;color:#fff}
+.wk-key.absent{background:#e2e8f0;border-color:#e2e8f0;color:#94a3b8}
+.wk-key.wide{min-width:52px;font-size:11px}
+.wordle-msg{text-align:center;padding:10px;border-radius:9px;font-size:13px;font-weight:700;margin-bottom:12px;display:none}
+.wordle-msg.show{display:block}
+.wordle-msg.ok{background:var(--green-soft);color:#065f46}
+.wordle-msg.info{background:var(--brand-light);color:var(--brand)}
+
+/* Math Speed */
+.math-wrap{max-width:520px;margin:0 auto}
+.math-eq-box{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:16px;padding:36px;text-align:center;
+  margin-bottom:20px;box-shadow:var(--shadow);
+}
+.math-level-lbl{
+  font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);margin-bottom:8px;
+}
+.math-eq-text{
+  font-family:'Syne',sans-serif;font-size:52px;
+  font-weight:800;color:var(--text);margin-bottom:4px;
+}
+.math-stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;margin-bottom:18px;
+}
+.math-stat-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px;text-align:center;
+}
+.math-stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text)}
+.math-stat-lbl{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px}
+.math-opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.math-opt{
+  padding:18px;border-radius:11px;
+  border:1.5px solid var(--border);
+  background:var(--surface2);
+  font-family:'Syne',sans-serif;font-size:24px;
+  font-weight:800;color:var(--text);
+  cursor:pointer;transition:var(--transition);
+  text-align:center;
+}
+.math-opt:hover:not(:disabled){
+  border-color:rgba(37,99,235,.4);
+  background:var(--brand-light);color:var(--brand);
+}
+.math-opt.correct{background:#d1fae5;border-color:#059669;color:#065f46}
+.math-opt.wrong{background:#fff1f2;border-color:#e11d48;color:#9f1239}
+.math-opt:disabled{cursor:not-allowed}
+.math-input-row{display:flex;gap:10px}
+.math-inp{
+  flex:1;padding:14px 16px;border-radius:10px;
+  border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text);
+  font-size:20px;font-weight:700;text-align:center;
+  font-family:'Syne',sans-serif;transition:border 0.2s;
+}
+.math-inp:focus{border-color:var(--brand)}
+.math-go-btn{
+  padding:14px 22px;border-radius:10px;
+  background:var(--brand);color:#fff;
+  font-size:15px;font-weight:700;cursor:pointer;
+  transition:var(--transition);
+  box-shadow:0 4px 12px rgba(37,99,235,.28);
+}
+.math-go-btn:hover{background:var(--brand-dark);transform:translateY(-1px)}
+.math-fb{text-align:center;font-size:14px;font-weight:700;padding:12px;border-radius:10px;margin-bottom:12px;display:none}
+.math-fb.show{display:block}
+.math-fb.ok{background:var(--green-soft);color:#065f46}
+.math-fb.no{background:var(--rose-soft);color:#9f1239}
+
+/* Sequence */
+.seq-wrap{max-width:560px;margin:0 auto}
+.seq-display{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:16px;padding:32px;text-align:center;
+  margin-bottom:20px;box-shadow:var(--shadow);
+}
+.seq-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.seq-numbers{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.seq-num{
+  width:52px;height:52px;border-radius:12px;
+  background:var(--brand-light);border:2px solid rgba(37,99,235,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--brand);
+}
+.seq-num.hidden{background:var(--surface2);border:2px dashed var(--border2);color:var(--muted);font-size:28px}
+.seq-hint{font-size:13px;color:var(--muted);margin-bottom:16px}
+.seq-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.seq-opt{
+  padding:14px 8px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--surface2);
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  color:var(--text);cursor:pointer;transition:var(--transition);
+  text-align:center;
+}
+.seq-opt:hover:not(:disabled){border-color:rgba(37,99,235,.4);background:var(--brand-light);color:var(--brand)}
+.seq-opt.correct{background:#d1fae5;border-color:#059669;color:#065f46}
+.seq-opt.wrong{background:#fff1f2;border-color:#e11d48;color:#9f1239}
+.seq-opt:disabled{cursor:not-allowed}
+.seq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+
+/* Analogy */
+.analogy-wrap{max-width:600px;margin:0 auto}
+.analogy-box{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:16px;padding:32px;text-align:center;
+  margin-bottom:20px;box-shadow:var(--shadow);
+}
+.analogy-q{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(18px,3vw,26px);
+  font-weight:800;color:var(--text);
+  margin-bottom:8px;line-height:1.3;
+}
+.analogy-sub{font-size:13px;color:var(--muted);margin-bottom:8px}
+.analogy-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.analogy-opt{
+  padding:16px;border-radius:11px;
+  border:1.5px solid var(--border);background:var(--surface2);
+  font-size:14px;font-weight:700;color:var(--text);
+  cursor:pointer;transition:var(--transition);text-align:center;
+}
+.analogy-opt:hover:not(:disabled){border-color:rgba(37,99,235,.4);background:var(--brand-light);color:var(--brand)}
+.analogy-opt.correct{background:#d1fae5;border-color:#059669;color:#065f46}
+.analogy-opt.wrong{background:#fff1f2;border-color:#e11d48;color:#9f1239}
+.analogy-opt:disabled{cursor:not-allowed}
+.analogy-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+
+/* Logic */
+.logic-wrap{max-width:600px;margin:0 auto}
+.logic-box{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:16px;padding:28px;
+  margin-bottom:20px;box-shadow:var(--shadow);
+}
+.logic-type-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:7px;
+  font-size:10.5px;font-weight:700;margin-bottom:12px;
+}
+.logic-q{font-size:16px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:20px}
+.logic-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.logic-opt{
+  padding:14px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--surface2);
+  font-size:13.5px;font-weight:600;color:var(--text);
+  cursor:pointer;transition:var(--transition);
+  text-align:left;display:flex;align-items:flex-start;gap:8px;
+}
+.logic-opt:hover:not(:disabled){border-color:rgba(37,99,235,.4);background:var(--brand-light);color:var(--brand)}
+.logic-opt.correct{background:#d1fae5;border-color:#059669;color:#065f46}
+.logic-opt.wrong{background:#fff1f2;border-color:#e11d48;color:#9f1239}
+.logic-opt:disabled{cursor:not-allowed}
+.logic-opt-num{
+  width:24px;height:24px;border-radius:6px;
+  background:var(--border);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;flex-shrink:0;
+}
+.logic-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+
+/* Flashcard */
+.flash-wrap{max-width:560px;margin:0 auto}
+.flash-card{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:20px;min-height:200px;
+  padding:36px 32px;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;
+  text-align:center;cursor:pointer;margin-bottom:16px;
+  box-shadow:var(--shadow-md);transition:var(--transition);
+  position:relative;overflow:hidden;
+}
+.flash-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(37,99,235,.12)}
+.flash-card.flipped{background:var(--brand-light);border-color:rgba(37,99,235,.25)}
+.flash-side{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px}
+.flash-word{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(22px,4vw,36px);
+  font-weight:800;color:var(--text);margin-bottom:8px;
+}
+.flash-hint{font-size:14px;color:var(--muted)}
+.flash-click{font-size:12px;color:var(--muted);position:absolute;bottom:12px;right:14px;font-weight:600}
+.flash-nav{display:flex;gap:8px;margin-bottom:16px}
+.flash-btn{
+  flex:1;padding:12px;border-radius:10px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:var(--transition);
+}
+.flash-btn.know{background:var(--green-soft);border:1.5px solid rgba(5,150,105,.2);color:var(--green)}
+.flash-btn.know:hover{background:#bbf7d0;border-color:var(--green)}
+.flash-btn.review{background:var(--rose-soft);border:1.5px solid rgba(225,29,72,.15);color:var(--rose)}
+.flash-btn.review:hover{background:#fecdd3;border-color:var(--rose)}
+.flash-progress{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.flash-prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;flex:1;margin:0 12px}
+.flash-prog-fill{height:100%;background:linear-gradient(90deg,var(--green),#34d399);border-radius:3px;transition:width 0.4s ease}
+
+/* Sudoku */
+.sudoku-wrap{max-width:480px;margin:0 auto}
+.sudoku-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.sudoku-board{
+  display:grid;grid-template-columns:repeat(9,1fr);
+  border:2px solid var(--text);border-radius:8px;
+  overflow:hidden;background:var(--border);
+  gap:1px;margin-bottom:16px;
+}
+.sudoku-cell{
+  width:100%;aspect-ratio:1;border:none;
+  background:var(--surface);color:var(--text);
+  font-family:'Syne',sans-serif;font-size:16px;
+  font-weight:700;text-align:center;cursor:pointer;
+  transition:background 0.12s;outline:none;
+}
+.sudoku-cell:focus{background:var(--brand-light);color:var(--brand)}
+.sudoku-cell.given{background:var(--surface2);color:var(--text2);cursor:not-allowed;font-weight:800}
+.sudoku-cell.error{background:#fff1f2;color:var(--rose);animation:shake 0.4s ease}
+.sudoku-cell.correct{background:#d1fae5;color:#065f46}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sudoku-border-r{border-right:2px solid var(--text2)!important}
+.sudoku-border-b{border-bottom:2px solid var(--text2)!important}
+.sudoku-numpad{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.sudoku-num-btn{
+  width:42px;height:42px;border-radius:9px;
+  background:var(--surface2);border:1.5px solid var(--border);
+  color:var(--text);font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:800;cursor:pointer;
+  transition:var(--transition);
+  display:flex;align-items:center;justify-content:center;
+}
+.sudoku-num-btn:hover{background:var(--brand-light);border-color:rgba(37,99,235,.3);color:var(--brand)}
+.sudoku-actions{display:flex;gap:8px;flex-wrap:wrap}
+.sudoku-act-btn{
+  flex:1;padding:10px;border-radius:9px;
+  background:var(--surface2);border:1.5px solid var(--border);
+  color:var(--text2);font-size:12.5px;font-weight:700;
+  cursor:pointer;transition:var(--transition);
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.sudoku-act-btn:hover{border-color:rgba(37,99,235,.3);color:var(--brand)}
+.sudoku-act-btn svg{width:14px;height:14px}
+
+/* Leaderboard */
+.board-tabs{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.board-tab{
+  padding:7px 18px;border-radius:8px;font-size:13px;
+  font-weight:700;border:1.5px solid var(--border);
+  color:var(--muted);background:none;cursor:pointer;
+  transition:var(--transition);
+}
+.board-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 3px 10px rgba(37,99,235,.28)}
+.board-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.board-row{
+  display:grid;grid-template-columns:44px 1fr 80px 80px;
+  align-items:center;padding:13px 18px;
+  border-bottom:1px solid var(--border);transition:background 0.12s;
+}
+.board-row:last-child{border-bottom:none}
+.board-row:hover{background:var(--surface2)}
+.board-row.hdr{background:var(--surface2);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.board-row.top1{background:linear-gradient(90deg,rgba(217,119,6,.06),transparent)}
+.board-row.top2{background:linear-gradient(90deg,rgba(148,163,184,.05),transparent)}
+.board-row.top3{background:linear-gradient(90deg,rgba(180,83,9,.05),transparent)}
+.b-rank{font-family:'Syne',sans-serif;font-size:17px;color:var(--muted);text-align:center}
+.b-rank.g{color:#d97706}.b-rank.s{color:#94a3b8}.b-rank.b{color:#b45309}
+.b-player{display:flex;align-items:center;gap:9px}
+.b-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;color:#fff}
+.b-name{font-size:13.5px;font-weight:700;color:var(--text)}
+.b-score{font-family:'Syne',sans-serif;font-size:16px;color:var(--gold);text-align:center;font-weight:700}
+.b-games{font-size:12px;color:var(--muted);text-align:center;font-weight:600}
+.my-row{background:var(--brand-light)!important;border:1px solid rgba(37,99,235,.15)}
+
+/* Profile */
+.prof-hero{
+  background:linear-gradient(135deg,#0c1a6b,#1e3a8a);
+  border-radius:var(--radius-lg);
+  padding:28px;margin-bottom:18px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+}
+.prof-av{
+  width:68px;height:68px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  border:3px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:26px;
+  font-weight:800;color:#fff;flex-shrink:0;
+}
+.prof-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:3px}
+.prof-email{font-size:13px;color:rgba(255,255,255,.6)}
+.prof-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.prof-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.prof-stat .pn{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text)}
+.prof-stat .pl{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+.hist-item{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:11px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;margin-bottom:8px;
+}
+.hist-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-icon svg{width:18px;height:18px}
+.hist-info{flex:1}
+.hist-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.hist-time{font-size:11px;color:var(--muted);margin-top:1px}
+.hist-score{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--gold)}
+.logout-btn{
+  margin-top:16px;padding:10px 22px;
+  border-radius:9px;background:var(--rose-soft);
+  border:1.5px solid rgba(225,29,72,.15);
+  color:var(--rose);font-size:13px;font-weight:700;
+  cursor:pointer;transition:var(--transition);
+}
+.logout-btn:hover{background:#fecdd3}
+
+/* Modals */
+.modal-bg{
+  position:fixed;inset:0;
+  background:rgba(15,23,42,.5);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  z-index:500;display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:32px;
+  max-width:420px;width:100%;box-shadow:var(--shadow-md);
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{float:right;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;margin-top:-4px;transition:color 0.2s}
+.modal-close:hover{color:var(--text)}
+.modal-logo-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--brand),#0ea5e9);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.modal-logo-icon svg{width:24px;height:24px;color:#fff}
+.modal-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);text-align:center;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:22px}
+.form-grp{margin-bottom:14px}
+.form-lbl{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.02em}
+.form-inp{
+  width:100%;padding:11px 14px;border-radius:9px;
+  border:1.5px solid var(--border);background:var(--surface2);
+  color:var(--text);font-size:13.5px;outline:none;
+  transition:border 0.2s;
+}
+.form-inp:focus{border-color:rgba(37,99,235,.5)}
+.form-inp::placeholder{color:var(--muted)}
+.form-err{
+  background:var(--rose-soft);border:1px solid rgba(225,29,72,.15);
+  color:#9f1239;font-size:12.5px;font-weight:600;
+  padding:9px 12px;border-radius:8px;margin-bottom:12px;
+  display:none;
+}
+.form-err.show{display:block}
+.form-submit{
+  width:100%;padding:12px;border-radius:9px;
+  background:var(--brand);color:#fff;font-size:14px;
+  font-weight:700;cursor:pointer;transition:var(--transition);
+  box-shadow:0 4px 12px rgba(37,99,235,.25);margin-top:2px;
+}
+.form-submit:hover{background:var(--brand-dark);transform:translateY(-1px)}
+.form-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.form-switch a{color:var(--brand);font-weight:600;cursor:pointer;transition:color 0.2s}
+.form-switch a:hover{color:var(--brand-dark);text-decoration:underline}
+
+/* Result Modal */
+.result-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:36px;
+  max-width:380px;width:100%;text-align:center;
+  box-shadow:var(--shadow-md);animation:slideUp 0.3s ease;
+}
+.result-icon{width:72px;height:72px;border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center}
+.result-icon svg{width:36px;height:36px}
+.result-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text);margin-bottom:6px}
+.result-score{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;color:var(--brand);margin-bottom:6px}
+.result-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+.result-btns{display:flex;gap:8px}
+.result-btns button{flex:1;padding:11px;border-radius:9px;font-size:13.5px;font-weight:700;cursor:pointer;transition:var(--transition);border:none}
+.rb-replay{background:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.28)}
+.rb-replay:hover{background:var(--brand-dark)}
+.rb-home{background:var(--surface2);color:var(--text2);border:1.5px solid var(--border)!important}
+.rb-home:hover{background:var(--surface)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:600;
+  background:var(--text);color:#fff;border-radius:10px;
+  padding:12px 18px;font-size:13.5px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+  transform:translateY(80px);opacity:0;
+  transition:all 0.3s ease;pointer-events:none;
+  max-width:320px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--rose)}
+
+.hide{display:none!important}
+
+/* Medium screens */
+@media(max-width:900px){
+  .sidebar{
+    transform:translateX(-100%);
+    box-shadow:0 0 0 transparent;
+  }
+  .sidebar.open{
+    transform:translateX(0);
+    box-shadow:0 0 40px rgba(0,0,0,.25);
+  }
+  .main{margin-left:0}
+  .hero{grid-template-columns:1fr;padding:28px 22px}
+  .hero-right{display:none}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .games-grid{grid-template-columns:1fr 1fr}
+  .game-card.featured{grid-column:span 2}
+  .content{padding:18px 14px 40px}
+  .hamburger{display:flex}
+}
+@media(max-width:680px){
+  .hero h1{font-size:22px}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:8px}
+  .subjects-grid{grid-template-columns:repeat(3,1fr)}
+  .games-grid{grid-template-columns:1fr}
+  .game-card.featured{grid-column:span 1}
+  .content{padding:14px 10px 36px}
+  .quiz-wrap{padding:20px 14px}
+  .quiz-q{font-size:16px}
+  .quiz-opts{grid-template-columns:1fr}
+  .rope-game-board{grid-template-columns:1fr}
+  .rope-center{order:-1}
+  .rope-panel{padding:12px}
+  .rope-q-display{font-size:12px;min-height:56px}
+  .rope-opt{font-size:12px;padding:9px 10px}
+  .rope-center{gap:6px}
+  .memory-wrap{max-width:100%}
+  .mem-grid{gap:6px}
+  .wordle-cell{width:44px;height:44px;font-size:16px}
+  .wordle-wrap{max-width:100%}
+  .board-row{grid-template-columns:36px 1fr 70px 60px;padding:10px 12px}
+  .topbar{padding:0 14px}
+  .arena-header{gap:8px}
+  .arena-title{font-size:16px}
+  .math-stats-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:420px){
+  .hero{padding:20px 14px}
+  .hero h1{font-size:19px}
+  .subjects-grid{grid-template-columns:repeat(2,1fr)}
+  .prof-stats-grid{grid-template-columns:1fr 1fr}
+  .math-stats-row{grid-template-columns:repeat(2,1fr)}
+  .seq-opts{grid-template-columns:repeat(2,1fr)}
+  .wordle-cell{width:38px;height:38px;font-size:14px}
+  .wk-key{min-width:26px;height:38px;font-size:12px}
+  .wk-key.wide{min-width:44px}
+  .sec{padding:16px 14px}
+}
+@media(min-width:900px) and (max-width:1100px){
+  .content{padding:22px 18px 50px}
+  .games-grid{grid-template-columns:repeat(2,1fr)}
+  .game-card.featured{grid-column:span 2}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.02-5.64a2.5 2.5 0 0 1 4.98-.44"/>
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.02-5.64a2.5 2.5 0 0 0-4.98-.44"/>
+      </svg>
+    </div>
+    <div class="logo-name">Brain<span>Game</span>.uz</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Asosiy</div>
+    <div class="nav-item active" onclick="showPage('home')" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Bosh sahifa
+    </div>
+    <div class="nav-item" onclick="showPage('games')" data-page="games">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="6" width="20" height="12" rx="3"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/>
+      </svg>
+      O'yinlar
+    </div>
+    <div class="nav-item" onclick="showPage('leaderboard')" data-page="leaderboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 20V10M12 20V4M6 20v-6"/>
+      </svg>
+      Reyting
+    </div>
+    <div class="nav-item hide" id="navAdmin" onclick="showPage('admin')" data-page="admin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+      Admin panel
+    </div>
+
+    <div class="nav-divider"></div>
+    <div class="nav-label">Miyya charxlash</div>
+
+    <div class="nav-item" onclick="startGame('quiz')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/>
+      </svg>
+      Viktorina
+    </div>
+    <div class="nav-item" onclick="startGame('wordle')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>
+      </svg>
+      Wordle (So'z)
+      <span class="nav-badge new">YANGI</span>
+    </div>
+    <div class="nav-item" onclick="startGame('sequence')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      Ketma-ketlik
+      <span class="nav-badge new">YANGI</span>
+    </div>
+    <div class="nav-item" onclick="startGame('analogy')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10 16l-6-6 6-6"/><path d="M20 21v-7a4 4 0 0 0-4-4H5"/>
+      </svg>
+      Analogiya
+      <span class="nav-badge new">YANGI</span>
+    </div>
+    <div class="nav-item" onclick="startGame('logic')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.28 4.5-3.2 5.72V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.28A7 7 0 0 1 5 9a7 7 0 0 1 7-7z"/>
+      </svg>
+      Mantiq / IQ
+      <span class="nav-badge new">YANGI</span>
+    </div>
+    <div class="nav-item" onclick="startGame('math')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Tez Matematika
+    </div>
+    <div class="nav-item" onclick="startGame('memory')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      Xotira o'yini
+    </div>
+    <div class="nav-item" onclick="startGame('flashcard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+      </svg>
+      Flashcard
+    </div>
+    <div class="nav-item" onclick="startGame('rope')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><line x1="8" y1="12" x2="16" y2="12"/>
+      </svg>
+      Arqon tortish
+    </div>
+    <div class="nav-item" onclick="startGame('sudoku')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>
+      </svg>
+      Sudoku
+      <span class="nav-badge new">YANGI</span>
+    </div>
+
+    <div class="nav-divider"></div>
+    <div class="nav-item" onclick="showPage('profile')" data-page="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
+      </svg>
+      Profil
+    </div>
+  </nav>
+
+  <div class="sidebar-footer" id="sidebarAuth">
+    <div class="sidebar-auth">
+      <button class="btn-login" onclick="openModal('login')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Kirish
+      </button>
+      <button class="btn-register" onclick="openModal('register')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        Ro'yxatdan o'tish
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menyu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="breadcrumb" id="breadcrumb">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        </svg>
+        <span>Bosh sahifa</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-chip" id="topbarScore" style="display:none">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        <span id="topbarScoreNum">0</span> ball
+      </div>
+      <button class="topbar-btn" onclick="openModal('login')" aria-label="Profil" title="Profilga kirish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <div>
+          <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.02-5.64a2.5 2.5 0 0 1 4.98-.44"/>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.02-5.64a2.5 2.5 0 0 0-4.98-.44"/>
+            </svg>
+            O'yin orqali mantiqiy fikrlash
+          </div>
+          <h1>Miyya charxlovchi<br><em>ta'limiy o'yinlar</em></h1>
+          <p class="hero-text">Wordle, Sudoku, Mantiq, Analogiya, Ketma-ketlik va yana 6+ o'yin. O'quvchilar va o'qituvchilar uchun maxsus ishlab chiqilgan platforma.</p>
+          <div class="hero-btns">
+            <button class="btn-white" onclick="showPage('games')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21"/>
+              </svg>
+              O'yinlarni ko'rish
+            </button>
+            <button class="btn-outline-white" onclick="openModal('register')">Bepul ro'yxat</button>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-mini-card">
+            <div class="hero-mini-icon" style="background:rgba(124,58,237,.25)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2">
+                <path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.28 4.5-3.2 5.72V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.28A7 7 0 0 1 5 9a7 7 0 0 1 7-7z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="hero-mini-title">10+ Miyya o'yini</div>
+              <div class="hero-mini-desc">Wordle, Sudoku, IQ, Analogiya...</div>
+            </div>
+          </div>
+          <div class="hero-mini-card">
+            <div class="hero-mini-icon" style="background:rgba(5,150,105,.25)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2">
+                <path d="M18 20V10M12 20V4M6 20v-6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="hero-mini-title">Global Reyting</div>
+              <div class="hero-mini-desc">Top o'yinchilar ro'yxati</div>
+            </div>
+          </div>
+          <div class="hero-mini-card">
+            <div class="hero-mini-icon" style="background:rgba(217,119,6,.2)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2">
+                <path d="M12 2l3 6 6 .9-4.5 4.3 1 6.8-5.5-3-5.5 3 1-6.8L3 8.9 9 8l3-6z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="hero-mini-title">Ball tizimi</div>
+              <div class="hero-mini-desc">O'ynang va mukofot qozonin</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(37,99,235,.1);color:var(--brand)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
+            </svg>
+          </div>
+          <div class="stat-num">15K+</div>
+          <div class="stat-lbl">O'yinchilar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(5,150,105,.1);color:var(--green)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="3"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/>
+            </svg>
+          </div>
+          <div class="stat-num">10+</div>
+          <div class="stat-lbl">O'yin turi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(217,119,6,.1);color:var(--gold)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </div>
+          <div class="stat-num">8+</div>
+          <div class="stat-lbl">Fanlar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3 6 6 .9-4.5 4.3 1 6.8-5.5-3-5.5 3 1-6.8L3 8.9 9 8l3-6z"/>
+            </svg>
+          </div>
+          <div class="stat-num">1K+</div>
+          <div class="stat-lbl">Savollar</div>
+        </div>
+      </div>
+
+      <!-- Subjects -->
+      <div class="sec">
+        <div class="sec-hdr">
+          <div>
+            <div class="sec-badge" style="background:rgba(37,99,235,.08);color:var(--brand)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              Fanlar
+            </div>
+            <h2 class="sec-title">Fan tanlang</h2>
+            <p class="sec-desc">8 ta fan bo'yicha viktorina. Har biri uchun maxsus savol bazasi.</p>
+          </div>
+        </div>
+        <div class="subjects-grid">
+          <div class="subj-card" onclick="selSubj('math');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(37,99,235,.1);color:var(--brand)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="subj-name">Matematika</div>
+            <div class="subj-count">80+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('biology');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(5,150,105,.1);color:var(--green)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="subj-name">Biologiya</div>
+            <div class="subj-count">70+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('history');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(217,119,6,.1);color:var(--gold)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="subj-name">Tarix</div>
+            <div class="subj-count">90+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('geography');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(8,145,178,.1);color:var(--cyan)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="subj-name">Geografiya</div>
+            <div class="subj-count">75+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('physics');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <div class="subj-name">Fizika</div>
+            <div class="subj-count">65+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('chemistry');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(225,29,72,.1);color:var(--rose)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6l1 9H8L9 3z"/><path d="M8 12c-2 2-3 4-3 6a7 7 0 0 0 14 0c0-2-1-4-3-6"/></svg>
+            </div>
+            <div class="subj-name">Kimyo</div>
+            <div class="subj-count">60+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('english');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(8,145,178,.1);color:var(--cyan)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="subj-name">Ingliz tili</div>
+            <div class="subj-count">85+ savol</div>
+          </div>
+          <div class="subj-card" onclick="selSubj('all');startGame('quiz')">
+            <div class="subj-icon" style="background:rgba(37,99,235,.08);color:var(--brand)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            </div>
+            <div class="subj-name">Aralash</div>
+            <div class="subj-count">1000+ savol</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Types -->
+      <div class="sec">
+        <div class="sec-hdr">
+          <div>
+            <div class="sec-badge" style="background:rgba(124,58,237,.08);color:var(--purple)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg>
+              O'yin turlari
+            </div>
+            <h2 class="sec-title">10+ Miyya charxlovchi metod</h2>
+            <p class="sec-desc">Har dars uchun turli xil interaktiv o'yinlar</p>
+          </div>
+        </div>
+        <div class="games-grid">
+          <div class="game-card featured" onclick="startGame('logic')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(124,58,237,.1);color:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.28 4.5-3.2 5.72V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.28A7 7 0 0 1 5 9a7 7 0 0 1 7-7z"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(124,58,237,.1);color:var(--purple)">🧠 Mantiq & IQ</div>
+            <h3>Mantiqiy fikrlash</h3>
+            <p>Yuqori darajali IQ savollar, mantiqiy muammolar va klassik matematik galvonkalar. Miyya kuchini sinab ko'ring!</p>
+            <div class="game-tags"><span class="gtag">IQ Test</span><span class="gtag">Mantiq</span><span class="gtag">Matematik</span><span class="gtag">Yangi</span></div>
+          </div>
+          <div class="game-card" onclick="startGame('wordle')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(5,150,105,.1);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(5,150,105,.1);color:var(--green)">📝 So'z</div>
+            <h3>Wordle</h3>
+            <p>5 harflik o'zbek so'zini 6 urinishda toping. Rang ko'rsatmalari bilan!</p>
+            <div class="game-tags"><span class="gtag">Yangi</span><span class="gtag">O'zbek</span></div>
+          </div>
+          <div class="game-card" onclick="startGame('sequence')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(37,99,235,.1);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(37,99,235,.1);color:var(--brand)">🔢 Ketma-ketlik</div>
+            <h3>Son ketma-ketligi</h3>
+            <p>Qoidaga asosan keyingi sonni toping. Arifmetik, geometrik, Fibonachi...</p>
+            <div class="game-tags"><span class="gtag">Yangi</span><span class="gtag">Mantiq</span></div>
+          </div>
+          <div class="game-card" onclick="startGame('analogy')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(217,119,6,.1);color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 16l-6-6 6-6"/><path d="M20 21v-7a4 4 0 0 0-4-4H5"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(217,119,6,.1);color:var(--gold)">🔗 Analogiya</div>
+            <h3>So'z analogiyasi</h3>
+            <p>A : B = C : ? munosabatini toping. Lug'at va mantiqni birlashtiring!</p>
+            <div class="game-tags"><span class="gtag">Yangi</span><span class="gtag">Mantiq</span></div>
+          </div>
+          <div class="game-card" onclick="startGame('sudoku')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(8,145,178,.1);color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(8,145,178,.1);color:var(--cyan)">🔲 Sudoku</div>
+            <h3>Sudoku</h3>
+            <p>Klassik 9×9 Sudoku. Har qatorda 1-9 raqamlarni to'ldiring!</p>
+            <div class="game-tags"><span class="gtag">Yangi</span><span class="gtag">Mantiq</span></div>
+          </div>
+          <div class="game-card" onclick="startGame('flashcard')">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+            <div class="game-icon" style="background:rgba(225,29,72,.1);color:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+            <div class="gtype-badge" style="background:rgba(225,29,72,.1);color:var(--rose)">🃏 Flashcard</div>
+            <h3>Flashcard</h3>
+            <p>Lug'at, tarix sanalari, kimyoviy formulalar. Bilim va'da!</p>
+            <div class="game-tags"><span class="gtag">Ta'lim</span><span class="gtag">Lug'at</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAMES PAGE -->
+    <div class="page" id="page-games">
+      <!-- Game Arena -->
+      <div class="game-arena active" id="arena">
+        <div class="arena-header">
+          <button class="back-btn" onclick="closeArena()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Orqaga
+          </button>
+          <div class="arena-title" id="arenaTitle">O'yin tanlang</div>
+          <div class="arena-badge" id="arenaBadge"></div>
+        </div>
+
+        <!-- Quiz Game -->
+        <div id="gQuiz" class="hide">
+          <div class="quiz-wrap">
+            <div class="quiz-topbar">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <div class="quiz-subj-pill" id="qSubjPill"></div>
+                <div class="quiz-score-pill">⭐ <span id="qScore">0</span></div>
+              </div>
+              <div class="quiz-timer-pill">⏱ <span id="qTimer">15</span>s</div>
+            </div>
+            <div class="quiz-prog-wrap">
+              <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="qProg" style="width:0%"></div></div>
+              <div class="quiz-num" id="qNum">Savol 1 / 10</div>
+            </div>
+            <div class="quiz-q" id="qText"></div>
+            <div class="quiz-opts" id="qOpts"></div>
+            <div class="quiz-fb" id="qFb"></div>
+            <button class="quiz-next-btn" id="qNext" onclick="nextQ()">Keyingi →</button>
+          </div>
+        </div>
+
+        <!-- Memory Game -->
+        <div id="gMemory" class="hide">
+          <div class="memory-wrap">
+            <div class="mem-hdr">
+              <div class="mem-pills">
+                <div class="mem-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  <span id="mMoves">0</span> urinish
+                </div>
+                <div class="mem-pill" style="color:var(--green)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span id="mMatched">0</span>/8
+                </div>
+              </div>
+              <button class="mem-restart" onclick="initMemory()" style="width:auto;padding:7px 16px">Qayta</button>
+            </div>
+            <div class="mem-grid" id="memGrid"></div>
+          </div>
+        </div>
+
+        <!-- Rope Game -->
+        <div id="gRope" class="hide">
+          <div class="rope-wrap">
+            <div class="rope-game-board">
+              <div class="rope-panel blue">
+                <div class="rope-panel-header">
+                  <span class="rope-team-name">🔵 Ko'k jamoa</span>
+                  <span class="rope-team-score" id="rBlue">0</span>
+                </div>
+                <div class="rope-q-display" id="ropeQLBlue">Savol yuklanmoqda...</div>
+                <div class="rope-opts" id="ropeOptsBlue"></div>
+                <div class="rope-answered-badge" id="ropeAnsweredBlue"></div>
+              </div>
+              <div class="rope-center">
+                <div class="rope-timer-bar"><div class="rope-timer-fill" id="ropeTimerFill" style="width:100%"></div></div>
+                <div class="rope-timer-box" id="ropeTimerNum">12</div>
+                <div class="rope-bar-wrap">
+                  <div class="rope-bar">
+                    <div class="rb-blue" id="rbBlue" style="width:50%"></div>
+                    <div class="rb-red" id="rbRed" style="width:50%"></div>
+                    <div class="rb-dot" id="rbDot"></div>
+                  </div>
+                  <div class="rope-status-txt" id="ropeStatus">Tayyorlanmoqda...</div>
+                </div>
+                <div class="rope-q-num-badge" id="ropeQNum">Savol 1 / 12</div>
+                <div style="font-size:10px;color:var(--muted);text-align:center;font-weight:600;line-height:1.4">Har jamoa o'z savoliga<br>mustaqil javob beradi</div>
+              </div>
+              <div class="rope-panel red">
+                <div class="rope-panel-header">
+                  <span class="rope-team-name">🔴 Qizil jamoa</span>
+                  <span class="rope-team-score" id="rRed">0</span>
+                </div>
+                <div class="rope-q-display" id="ropeQLRed">Savol yuklanmoqda...</div>
+                <div class="rope-opts" id="ropeOptsRed"></div>
+                <div class="rope-answered-badge" id="ropeAnsweredRed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wordle Game -->
+        <div id="gWordle" class="hide">
+          <div class="wordle-wrap">
+            <div class="wordle-hdr">
+              <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text)">Wordle</div>
+              <div style="display:flex;gap:8px">
+                <div class="mem-pill" style="color:var(--rose)">❤️ <span id="wordleAttempts">6</span></div>
+                <button onclick="initWordle()" class="mem-restart" style="width:auto;padding:6px 14px;margin:0">Yangi so'z</button>
+              </div>
+            </div>
+            <div class="wordle-msg" id="wordleMsg"></div>
+            <div class="wordle-board" id="wordleBoard"></div>
+            <div class="wordle-keyboard" id="wordleKb"></div>
+          </div>
+        </div>
+
+        <!-- Math Speed Game -->
+        <div id="gMath" class="hide">
+          <div class="math-wrap">
+            <div class="math-stats-row">
+              <div class="math-stat-box"><div class="math-stat-num" id="mathScore">0</div><div class="math-stat-lbl">Ball</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="mathStreak">0</div><div class="math-stat-lbl">Ketma-ket</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="mathLevel">1</div><div class="math-stat-lbl">Daraja</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="mathTimer">60</div><div class="math-stat-lbl">Vaqt</div></div>
+            </div>
+            <div class="math-eq-box">
+              <div class="math-level-lbl" id="mathLvlLbl">1-daraja</div>
+              <div class="math-eq-text" id="mathEq">? + ? = ?</div>
+            </div>
+            <div class="math-fb" id="mathFb"></div>
+            <div class="math-opts-grid" id="mathOpts"></div>
+            <div class="math-input-row">
+              <input class="math-inp" id="mathInp" type="number" placeholder="Javob..." onkeydown="if(event.key==='Enter')checkMath()">
+              <button class="math-go-btn" onclick="checkMath()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sequence Game -->
+        <div id="gSequence" class="hide">
+          <div class="seq-wrap">
+            <div class="seq-stats">
+              <div class="math-stat-box"><div class="math-stat-num" id="seqScore">0</div><div class="math-stat-lbl">Ball</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="seqLevel">1</div><div class="math-stat-lbl">Daraja</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="seqCorrect">0</div><div class="math-stat-lbl">To'g'ri</div></div>
+            </div>
+            <div class="seq-display">
+              <div class="seq-title">Keyingi raqamni toping</div>
+              <div class="seq-numbers" id="seqNumbers"></div>
+              <div class="seq-hint" id="seqHint"></div>
+            </div>
+            <div class="seq-opts" id="seqOpts"></div>
+          </div>
+        </div>
+
+        <!-- Analogy Game -->
+        <div id="gAnalogy" class="hide">
+          <div class="analogy-wrap">
+            <div class="analogy-stats">
+              <div class="math-stat-box"><div class="math-stat-num" id="analogyScore">0</div><div class="math-stat-lbl">Ball</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="analogyQ">1</div><div class="math-stat-lbl">Savol</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="analogyCorrect">0</div><div class="math-stat-lbl">To'g'ri</div></div>
+            </div>
+            <div class="analogy-box">
+              <div class="analogy-q" id="analogyQ2"></div>
+              <div class="analogy-sub">? o'rniga nima keladi?</div>
+            </div>
+            <div class="analogy-opts" id="analogyOpts"></div>
+            <div class="quiz-fb" id="analogyFb" style="margin-top:12px"></div>
+            <button class="quiz-next-btn" id="analogyNext" onclick="nextAnalogy()" style="max-width:480px;margin:10px auto 0;display:none">Keyingi →</button>
+          </div>
+        </div>
+
+        <!-- Logic Game -->
+        <div id="gLogic" class="hide">
+          <div class="logic-wrap">
+            <div class="logic-stats">
+              <div class="math-stat-box"><div class="math-stat-num" id="logicScore">0</div><div class="math-stat-lbl">Ball</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="logicQ">1</div><div class="math-stat-lbl">Savol</div></div>
+              <div class="math-stat-box"><div class="math-stat-num" id="logicCorrect">0</div><div class="math-stat-lbl">To'g'ri</div></div>
+            </div>
+            <div class="logic-box">
+              <div class="logic-type-badge" id="logicTypeBadge"></div>
+              <div class="logic-q" id="logicQText"></div>
+              <div class="logic-opts" id="logicOpts"></div>
+            </div>
+            <div class="quiz-fb" id="logicFb" style="margin-top:0;max-width:600px;margin:0 auto"></div>
+            <button class="quiz-next-btn" id="logicNext" onclick="nextLogic()" style="max-width:600px;margin:10px auto 0;display:none">Keyingi →</button>
+          </div>
+        </div>
+
+        <!-- Flashcard Game -->
+        <div id="gFlash" class="hide">
+          <div class="flash-wrap">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+              <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text)">Flashcard</div>
+              <div class="mem-pill" id="flashCounter">1 / 20</div>
+            </div>
+            <div class="flash-card" id="flashCard" onclick="flipFlash()">
+              <div class="flash-side" id="flashSide">SAVOL</div>
+              <div class="flash-word" id="flashWord">Atom</div>
+              <div class="flash-hint" id="flashHint">Bosing va javobni ko'ring</div>
+              <div class="flash-click">Bosib aylantiring →</div>
+            </div>
+            <div class="flash-nav">
+              <button class="flash-btn know" onclick="flashKnow()">✅ Bilaman</button>
+              <button class="flash-btn review" onclick="flashReview()">🔁 Qaytaraman</button>
+            </div>
+            <div class="flash-progress">
+              <span style="font-size:12px;font-weight:700;color:var(--green)" id="flashKnownCount">0 ta bilindim</span>
+              <div class="flash-prog-bar"><div class="flash-prog-fill" id="flashProgFill" style="width:0%"></div></div>
+              <span style="font-size:12px;font-weight:700;color:var(--muted)" id="flashTotalCount">20 ta</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sudoku Game -->
+        <div id="gSudoku" class="hide">
+          <div class="sudoku-wrap">
+            <div class="sudoku-hdr">
+              <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">Sudoku</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div class="mem-pill" id="sudokuTimer">⏱ 00:00</div>
+                <div class="mem-pill" style="color:var(--rose)">❌ <span id="sudokuErrors">0</span>/3</div>
+              </div>
+            </div>
+            <div class="sudoku-board" id="sudokuBoard"></div>
+            <div class="sudoku-numpad" id="sudokuNumpad"></div>
+            <div class="sudoku-actions">
+              <button class="sudoku-act-btn" onclick="initSudoku()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Yangi
+              </button>
+              <button class="sudoku-act-btn" onclick="sudokuHint()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
+                Maslahat
+              </button>
+              <button class="sudoku-act-btn" onclick="sudokuClear()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                O'chirish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Selection Grid -->
+      <div id="gameSelectGrid" class="hide">
+        <div class="sec">
+          <div class="sec-hdr">
+            <div>
+              <div class="sec-badge" style="background:rgba(124,58,237,.08);color:var(--purple)">O'yinlar</div>
+              <h2 class="sec-title">O'yin tanlang</h2>
+            </div>
+          </div>
+          <div class="games-grid">
+            <div class="game-card featured" onclick="startGame('quiz')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(37,99,235,.1);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(37,99,235,.1);color:var(--brand)">📝 Viktorina</div>
+              <h3>Viktorina — Fan tanlash</h3>
+              <p>8 ta fan, 1000+ savol. Har savolga 15 soniya. Reyting tizimi bilan!</p>
+              <div class="game-tags"><span class="gtag">Barcha fanlar</span><span class="gtag">Timer</span></div>
+            </div>
+            <div class="game-card" onclick="startGame('logic')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(124,58,237,.1);color:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.28 4.5-3.2 5.72V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.28A7 7 0 0 1 5 9a7 7 0 0 1 7-7z"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(124,58,237,.1);color:var(--purple)">🧠 IQ</div>
+              <h3>Mantiq & IQ</h3>
+              <p>Yuqori darajali mantiqiy savollar va IQ testlar.</p>
+            </div>
+            <div class="game-card" onclick="startGame('wordle')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(5,150,105,.1);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(5,150,105,.1);color:var(--green)">📝 Wordle</div>
+              <h3>Wordle</h3>
+              <p>5 harflik so'zni 6 urinishda toping. Rang bilan yordam!</p>
+            </div>
+            <div class="game-card" onclick="startGame('sequence')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(37,99,235,.1);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(37,99,235,.1);color:var(--brand)">🔢 Ketma-ketlik</div>
+              <h3>Son ketma-ketligi</h3>
+              <p>Arifmetik, geometrik, Fibonachi va boshqa ketma-ketliklar.</p>
+            </div>
+            <div class="game-card" onclick="startGame('analogy')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(217,119,6,.1);color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 16l-6-6 6-6"/><path d="M20 21v-7a4 4 0 0 0-4-4H5"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(217,119,6,.1);color:var(--gold)">🔗 Analogiya</div>
+              <h3>So'z Analogiyasi</h3>
+              <p>A : B = C : ? — munosabatni toping va mantiqiy fikrlang.</p>
+            </div>
+            <div class="game-card" onclick="startGame('sudoku')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(8,145,178,.1);color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(8,145,178,.1);color:var(--cyan)">🔲 Sudoku</div>
+              <h3>Sudoku</h3>
+              <p>Klassik 9×9 mantiq o'yini. Vaqt va xatoliklar sanaladi.</p>
+            </div>
+            <div class="game-card" onclick="startGame('math')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(217,119,6,.1);color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(217,119,6,.1);color:var(--gold)">⚡ Tez</div>
+              <h3>Tez Matematika</h3>
+              <p>60 soniyada imkon qadar ko'p misol yeching!</p>
+            </div>
+            <div class="game-card" onclick="startGame('memory')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(225,29,72,.1);color:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(225,29,72,.1);color:var(--rose)">🃏 Xotira</div>
+              <h3>Xotira o'yini</h3>
+              <p>Juft kartochkalarni toping. Xotirangizni mashq qiling!</p>
+            </div>
+            <div class="game-card" onclick="startGame('flashcard')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(5,150,105,.1);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(5,150,105,.1);color:var(--green)">📚 O'rganish</div>
+              <h3>Flashcard</h3>
+              <p>O'tib ket yoki qaytaran. Lug'at va formulalar uchun!</p>
+            </div>
+            <div class="game-card" onclick="startGame('rope')">
+              <div class="play-overlay"><svg viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg></div>
+              <div class="game-icon" style="background:rgba(37,99,235,.1);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="gtype-badge" style="background:rgba(37,99,235,.1);color:var(--brand)">🤝 Jamoaviy</div>
+              <h3>Arqon tortish</h3>
+              <p>Ko'k vs Qizil. To'g'ri javob bergan jamoa g'alaba qozonadi!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD PAGE -->
+    <div class="page" id="page-leaderboard">
+      <div class="sec">
+        <div class="sec-hdr">
+          <div>
+            <div class="sec-badge" style="background:rgba(217,119,6,.08);color:var(--gold)">🏆 Reyting</div>
+            <h2 class="sec-title">Eng yaxshi o'yinchilar</h2>
+            <p class="sec-desc">Haftaning reytingi</p>
+          </div>
+        </div>
+        <div class="board-tabs" id="boardTabs">
+          <button class="board-tab active" onclick="switchBoard('quiz',this)">Viktorina</button>
+          <button class="board-tab" onclick="switchBoard('logic',this)">Mantiq</button>
+          <button class="board-tab" onclick="switchBoard('math',this)">Matematika</button>
+          <button class="board-tab" onclick="switchBoard('sequence',this)">Ketma-ketlik</button>
+          <button class="board-tab" onclick="switchBoard('memory',this)">Xotira</button>
+        </div>
+        <div class="board-table" id="boardTable"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div id="page-admin" class="page">
+
+      <!-- ── Header bar ── -->
+      <div class="karvo-adm-bar">
+        <div class="karvo-adm-bar-left">
+          <h1 class="karvo-adm-title">Xush kelibsiz, <span id="adminName">Admin</span></h1>
+          <p class="karvo-adm-sub"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;opacity:.6"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span id="adminDate">11.05.2026</span></p>
+        </div>
+        <div class="karvo-period-btns">
+          <button class="karvo-pbtn active" data-period="12oy"  onclick="setPeriod(this,'12oy')">12 oy</button>
+          <button class="karvo-pbtn"        data-period="30kun" onclick="setPeriod(this,'30kun')">30 kun</button>
+          <button class="karvo-pbtn"        data-period="7kun"  onclick="setPeriod(this,'7kun')">7 kun</button>
+          <button class="karvo-pbtn"        data-period="24soat" onclick="setPeriod(this,'24soat')">24 soat</button>
+        </div>
+      </div>
+
+      <!-- ── Top 2 metric cards + small cards ── -->
+      <div class="karvo-top-row">
+        <!-- Foydalanuvchilar big card -->
+        <div class="karvo-big-card karvo-big-blue">
+          <div class="karvo-big-meta">
+            <span class="karvo-big-lbl">Foydalanuvchilar</span>
+            <span class="karvo-badge-up" id="karvoBadgeUsers">↑ 100%</span>
+          </div>
+          <div class="karvo-big-num" id="totalUsers">0</div>
+          <div class="karvo-big-sub">Bu davrda: <span id="karvoSubUsers">0</span></div>
+          <div class="karvo-area-wrap"><canvas id="karvoChartUsers"></canvas></div>
+        </div>
+
+        <!-- Buyurtmalar big card -->
+        <div class="karvo-big-card karvo-big-blue">
+          <div class="karvo-big-meta">
+            <span class="karvo-big-lbl">O'yinlar</span>
+            <span class="karvo-badge-up" id="karvoBadgeGames">↑ 34%</span>
+          </div>
+          <div class="karvo-big-num" id="totalGames">0</div>
+          <div class="karvo-big-sub">Bu davrda: <span id="karvoSubGames">0</span></div>
+          <div class="karvo-area-wrap"><canvas id="karvoChartGames"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ── Savdo big card (full width) ── -->
+      <div class="karvo-savdo-card">
+        <div class="karvo-savdo-meta">
+          <span class="karvo-big-lbl">Umumiy ball</span>
+          <span class="karvo-badge-up" id="karvoBadgeScore">↑ 27%</span>
+        </div>
+        <div class="karvo-savdo-num" id="totalScore">0</div>
+        <div class="karvo-big-sub" style="margin-bottom:14px">Bu davrda: <span id="karvoSubScore">0</span></div>
+        <div class="karvo-savdo-area"><canvas id="karvoChartScore"></canvas></div>
+      </div>
+
+      <!-- ── Bottom stats row ── -->
+      <div class="karvo-stat4-row">
+        <div class="karvo-stat4">
+          <div class="karvo-stat4-icon" style="color:#38bdf8">🔥</div>
+          <div class="karvo-stat4-num" id="activeToday">0</div>
+          <div class="karvo-stat4-lbl">Bugun faol</div>
+        </div>
+        <div class="karvo-stat4">
+          <div class="karvo-stat4-icon" style="color:#a855f7">🆕</div>
+          <div class="karvo-stat4-num" id="todayRegs">0</div>
+          <div class="karvo-stat4-lbl">Yangi bugun</div>
+        </div>
+        <div class="karvo-stat4">
+          <div class="karvo-stat4-icon" style="color:#4ade80">🏆</div>
+          <div class="karvo-stat4-num" id="karvoTopScore">0</div>
+          <div class="karvo-stat4-lbl">Rekord ball</div>
+        </div>
+        <div class="karvo-stat4">
+          <div class="karvo-stat4-icon" style="color:#fbbf24">🎮</div>
+          <div class="karvo-stat4-num" id="karvoAvgGames">0</div>
+          <div class="karvo-stat4-lbl">O'rtacha/foydalanuvchi</div>
+        </div>
+      </div>
+
+      <!-- ── Activity log (hidden, still needed) ── -->
+      <div id="recentActivity" style="display:none"></div>
+      <div id="adminTopPlayers" style="display:none"></div>
+      <div id="donutTotal" style="display:none">0</div>
+      <div id="donutLegend" style="display:none"></div>
+      <canvas id="adminStatsCanvas" style="display:none"></canvas>
+      <canvas id="adminDonutCanvas" style="display:none"></canvas>
+
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="prof-hero">
+        <div class="prof-av" id="profAv">A</div>
+        <div>
+          <div class="prof-name" id="profName">Foydalanuvchi</div>
+          <div class="prof-email" id="profEmail">email@example.com</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <div class="topbar-chip">⭐ <span id="profCoins">0</span></div>
+        </div>
+      </div>
+      <div class="prof-stats-grid">
+        <div class="prof-stat"><div class="pn" id="profGames">0</div><div class="pl">O'yinlar</div></div>
+        <div class="prof-stat"><div class="pn" id="profWins">0</div><div class="pl">G'alabalar</div></div>
+        <div class="prof-stat"><div class="pn" id="profBest">0</div><div class="pl">Rekord</div></div>
+        <div class="prof-stat"><div class="pn" id="profStreak">0</div><div class="pl">Ketma-ket</div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hdr"><div><h2 class="sec-title" style="font-size:18px">So'nggi o'yinlar</h2></div></div>
+        <div id="histList"></div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Chiqish</button>
+    </div>
+  </div>
+</main>
+
+<!-- Auth Modals -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="mLogin">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="text-align:center">
+      <div class="modal-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.02-5.64a2.5 2.5 0 0 1 4.98-.44"/>
+          <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.02-5.64a2.5 2.5 0 0 0-4.98-.44"/>
+        </svg>
+      </div>
+      <div class="modal-title">Xush kelibsiz!</div>
+      <div class="modal-sub">Akkauntingizga kiring</div>
+    </div>
+    <div class="form-err" id="loginErr"></div>
+    <div class="form-grp"><label class="form-lbl">Email</label><input class="form-inp" id="loginEmail" type="email" placeholder="email@example.com"></div>
+    <div class="form-grp"><label class="form-lbl">Parol</label><input class="form-inp" id="loginPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="form-submit" onclick="doLogin()">Kirish</button>
+    <div class="form-switch">Akkaunt yo'qmi? <a onclick="openModal('register')">Ro'yxatdan o'ting</a></div>
+  </div>
+  <div class="modal hide" id="mRegister">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="text-align:center">
+      <div class="modal-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.02-5.64a2.5 2.5 0 0 1 4.98-.44"/>
+          <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.02-5.64a2.5 2.5 0 0 0-4.98-.44"/>
+        </svg>
+      </div>
+      <div class="modal-title">Qo'shiling!</div>
+      <div class="modal-sub">Bepul akkaunt yarating</div>
+    </div>
+    <div class="form-err" id="regErr"></div>
+    <div class="form-grp"><label class="form-lbl">Ism</label><input class="form-inp" id="regName" type="text" placeholder="Ismingiz"></div>
+    <div class="form-grp"><label class="form-lbl">Email</label><input class="form-inp" id="regEmail" type="email" placeholder="email@example.com"></div>
+    <div class="form-grp"><label class="form-lbl">Parol</label><input class="form-inp" id="regPass" type="password" placeholder="Min. 6 belgi" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <button class="form-submit" onclick="doRegister()">Ro'yxatdan o'tish</button>
+    <div class="form-switch">Akkaunt bormi? <a onclick="openModal('login')">Kiring</a></div>
+  </div>
+</div>
+
+<!-- Result Modal -->
+<div class="modal-bg" id="resultBg">
+  <div class="result-box">
+    <div class="result-icon" id="resIcon">
+      <svg viewBox="0 0 24 24" fill="#2563eb"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.8-5.5-3-5.5 3 1-6.8L3 8.9 9 8l3-6z"/></svg>
+    </div>
+    <div class="result-title" id="resTitle">Zo'r!</div>
+    <div class="result-score" id="resScore">850</div>
+    <div class="result-sub" id="resSub">ball yig'dingiz</div>
+    <div class="result-btns">
+      <button class="rb-replay" onclick="replayCurrentGame()">Qaytadan</button>
+      <button class="rb-home" onclick="goGamesFromResult()">O'yinlar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE & LOCAL STORAGE
+// ═══════════════════════════════════════════
+const UK = 'bg_users_v2', SK = 'bg_session_v2', SCK = 'bg_scores_v2', VK = 'bg_site_v2';
+let CU = null, CG = null, selectedSubj = 'all';
+let allTimers = [];
+
+const getUsers = () => JSON.parse(localStorage.getItem(UK) || '[]');
+const saveUsers = (u) => localStorage.setItem(UK, JSON.stringify(u));
+const getScores = () => JSON.parse(localStorage.getItem(SCK) || '{}');
+const saveScores = (s) => localStorage.setItem(SCK, JSON.stringify(s));
+const getSession = () => localStorage.getItem(SK);
+const saveSession = (e) => localStorage.setItem(SK, e);
+const clearSession = () => localStorage.removeItem(SK);
+const getSiteStats = () => JSON.parse(localStorage.getItem(VK) || JSON.stringify({
+  views: 0,
+  sessions: 0,
+  todayNew: 0,
+  todayViews: 0,
+  todaySessions: 0,
+  todayRegistrations: 0,
+  todayActiveUsers: 0,
+  today: new Date().toLocaleDateString('uz-UZ'),
+  history: []
+}));
+const saveSiteStats = (s) => localStorage.setItem(VK, JSON.stringify(s));
+
+function pushStatsHistory(stats, currentDate) {
+  if (!stats.today || stats.today === currentDate) return;
+  stats.history = stats.history || [];
+  const entry = {
+    date: stats.today,
+    views: stats.todayViews || 0,
+    sessions: stats.todaySessions || 0,
+    newUsers: stats.todayNew || 0,
+    registrations: stats.todayRegistrations || 0,
+    activeUsers: stats.todayActiveUsers || 0,
+  };
+  const existing = stats.history.findIndex(h => h.date === entry.date);
+  if (existing >= 0) stats.history[existing] = entry;
+  else stats.history.push(entry);
+  stats.history = stats.history.slice(-7);
+}
+
+function rollStatsToToday(stats) {
+  const today = new Date().toLocaleDateString('uz-UZ');
+  if (stats.today !== today) {
+    pushStatsHistory(stats, today);
+    stats.today = today;
+    stats.todayNew = 0;
+    stats.todayViews = 0;
+    stats.todaySessions = 0;
+    stats.todayRegistrations = 0;
+    stats.todayActiveUsers = 0;
+  }
+}
+
+function recordRegisteredActivity(email) {
+  const today = new Date().toLocaleDateString('uz-UZ');
+  const key = `bg_active_user_${email}_${today}`;
+  if (sessionStorage.getItem(key)) return;
+  const stats = getSiteStats();
+  rollStatsToToday(stats);
+  stats.todayActiveUsers = (stats.todayActiveUsers || 0) + 1;
+  saveSiteStats(stats);
+  sessionStorage.setItem(key, '1');
+}
+
+function registerSiteVisit() {
+  const stats = getSiteStats();
+  rollStatsToToday(stats);
+  stats.views = (stats.views || 0) + 1;
+  stats.todayViews = (stats.todayViews || 0) + 1;
+  if (!sessionStorage.getItem('bg_session_seen')) {
+    stats.sessions = (stats.sessions || 0) + 1;
+    stats.todaySessions = (stats.todaySessions || 0) + 1;
+    sessionStorage.setItem('bg_session_seen', '1');
+  }
+  if (!sessionStorage.getItem('bg_newuser_seen') && CU && !CU.registeredAt) {
+    sessionStorage.setItem('bg_newuser_seen', '1');
+  }
+  saveSiteStats(stats);
+}
+
+function shuffle(a) {
+  const r = [...a];
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+
+function clearAllTimers() {
+  allTimers.forEach(t => { clearInterval(t); clearTimeout(t); });
+  allTimers = [];
+}
+
+// ═══════════════════════════════════════════
+// QUESTIONS DATABASE
+// ═══════════════════════════════════════════
+const QDB = {
+  math: [
+    { q: "2 + 2 × 2 = ?", opts: ["8", "6", "10", "4"], ans: 1, exp: "Avval ko'paytirish: 2×2=4, keyin 2+4=6" },
+    { q: "√144 = ?", opts: ["11", "12", "13", "14"], ans: 1, exp: "12×12=144" },
+    { q: "100 ning 20% = ?", opts: ["5", "10", "15", "20"], ans: 3, exp: "100×0.2=20" },
+    { q: "3² + 4² = ?", opts: ["25", "35", "49", "7"], ans: 0, exp: "9+16=25" },
+    { q: "15 × 15 = ?", opts: ["200", "215", "225", "235"], ans: 2, exp: "15×15=225" },
+    { q: "2⁸ = ?", opts: ["128", "256", "512", "64"], ans: 1, exp: "2⁸=256" },
+    { q: "π ≈ ?", opts: ["2.14", "3.14", "3.41", "4.14"], ans: 1, exp: "π≈3.14159..." },
+    { q: "Uchburchak burchaklari yig'indisi?", opts: ["90°", "180°", "270°", "360°"], ans: 1, exp: "Har qanday uchburchak = 180°" },
+    { q: "0.5 × 0.5 = ?", opts: ["0.1", "0.25", "0.5", "1"], ans: 1, exp: "1/2 × 1/2 = 1/4 = 0.25" },
+    { q: "log₁₀(100) = ?", opts: ["1", "2", "10", "100"], ans: 1, exp: "10² = 100" },
+    { q: "Kvadratning perimetri (tomon=5)?", opts: ["10", "15", "20", "25"], ans: 2, exp: "4×5=20" },
+    { q: "1000 ÷ 25 = ?", opts: ["35", "40", "45", "50"], ans: 1, exp: "1000÷25=40" },
+  ],
+  biology: [
+    { q: "DNK nima?", opts: ["Oqsil", "Irsiyat moddasi", "Vitamin", "Ferment"], ans: 1, exp: "DNK - dezoksiribonuklein kislota" },
+    { q: "Fotosintez qayerda sodir bo'ladi?", opts: ["Ildizda", "Bargda", "Poyada", "Mevada"], ans: 1, exp: "Bargdagi xloroplastlarda" },
+    { q: "Qon guruhlari nechta?", opts: ["2", "3", "4", "5"], ans: 2, exp: "4 ta: I, II, III, IV" },
+    { q: "Mitoxondriya nima?", opts: ["Yadro", "Energiya manbai", "Qobiq", "Ribosoma"], ans: 1, exp: "Mitoxondriya - hujayra 'elektrostansiyasi'" },
+    { q: "Insulin qaysi organ ishlab chiqaradi?", opts: ["Jigar", "Buyrak", "Me'da osti bezi", "O'pka"], ans: 2, exp: "Me'da osti bezida" },
+    { q: "Insonning nechta juft xromosomasi bor?", opts: ["23", "46", "23 juft", "24 juft"], ans: 2, exp: "23 juft = 46 ta xromosoma" },
+    { q: "Eng katta hujayra?", opts: ["Nerv", "Tuxum hujayra", "Qon", "Mushak"], ans: 1, exp: "Tuxum hujayra" },
+    { q: "O'pkadagi eng kichik bo'shliq?", opts: ["Bronx", "Traxeya", "Alveola", "Bronxiola"], ans: 2, exp: "Alveolalarda gaz almashinuvi" },
+    { q: "Nerv impulsi tezligi?", opts: ["1 m/s", "10 m/s", "120 m/s", "1000 m/s"], ans: 2, exp: "≈ 70-120 m/s" },
+    { q: "Inson terisi qancha maydon?", opts: ["0.5 m²", "1 m²", "2 m²", "4 m²"], ans: 2, exp: "≈ 1.5-2 m²" },
+  ],
+  history: [
+    { q: "O'zbekiston mustaqilligi?", opts: ["1991", "1990", "1992", "1989"], ans: 0, exp: "1991 yil 1 sentabr" },
+    { q: "Amir Temur tug'ilgan yil?", opts: ["1336", "1346", "1370", "1405"], ans: 0, exp: "1336 yil Shahrisabzda" },
+    { q: "Buyuk ipak yo'li necha yil avval?", opts: ["500 yil", "1000 yil", "2000 yil", "3000 yil"], ans: 2, exp: "Mil.av. II asrda" },
+    { q: "Ikkinchi jahon urushi boshlanishi?", opts: ["1939", "1940", "1941", "1938"], ans: 0, exp: "1939 yil 1 sentabr" },
+    { q: "Amerika kashf etilgan yil?", opts: ["1392", "1492", "1592", "1692"], ans: 1, exp: "1492 yil" },
+    { q: "Al-Xorazmiy nima bilan mashhur?", opts: ["Astronomiya", "Algebra", "Tibb", "Tarix"], ans: 1, exp: "Algebra fanini yaratgan" },
+    { q: "SSSR qachon tarqaldi?", opts: ["1989", "1990", "1991", "1992"], ans: 2, exp: "1991 yil dekabr" },
+    { q: "Birinchi jahon urushi boshlandi?", opts: ["1912", "1914", "1916", "1918"], ans: 1, exp: "1914 yil 28 iyul" },
+    { q: "Ulug'bek qachon vafot etdi?", opts: ["1449", "1459", "1469", "1479"], ans: 0, exp: "1449 yil" },
+    { q: "Fransuz inqilobi yili?", opts: ["1789", "1799", "1769", "1759"], ans: 0, exp: "1789 yil" },
+  ],
+  geography: [
+    { q: "O'zbekiston poytaxti?", opts: ["Samarqand", "Namangan", "Toshkent", "Buxoro"], ans: 2, exp: "Toshkent" },
+    { q: "Dunyodagi eng uzun daryo?", opts: ["Amazonka", "Nil", "Yanszi", "Missisipi"], ans: 1, exp: "Nil ~6650 km" },
+    { q: "Eng katta okean?", opts: ["Atlantika", "Hind", "Tinch", "Shimoliy Muz"], ans: 2, exp: "Tinch okeani" },
+    { q: "Everest balandligi?", opts: ["8488 m", "8748 m", "8848 m", "8948 m"], ans: 2, exp: "8848.86 m" },
+    { q: "O'zbekistonning qo'shnilari?", opts: ["3 ta", "4 ta", "5 ta", "6 ta"], ans: 2, exp: "5 ta qo'shni" },
+    { q: "Kaspiy dengizi nima?", opts: ["Okean", "Ko'l", "Dengiz", "Daryo"], ans: 1, exp: "Dunyodagi eng katta ko'l" },
+    { q: "Aral dengizi qaysi davlatlarda?", opts: ["O'z va Qoz", "O'z va Tojik", "Qoz va Qirg'iz", "O'z va Qirg'iz"], ans: 0, exp: "O'zbekiston va Qozog'iston" },
+    { q: "Dunyoning eng katta mamlakati?", opts: ["Xitoy", "Kanada", "AQSh", "Rossiya"], ans: 3, exp: "Rossiya" },
+    { q: "Tinch okeanidagi eng baland tog'?", opts: ["Fuji", "Mauna Kea", "Cook", "Olimpus"], ans: 1, exp: "Mauna Kea" },
+    { q: "Afrikaning eng katta ko'li?", opts: ["Viktoriya", "Tanganyika", "Malavi", "Chad"], ans: 0, exp: "Viktoriya" },
+  ],
+  physics: [
+    { q: "Yorug'lik tezligi?", opts: ["200 000 km/s", "299 792 km/s", "300 000 km/s", "150 000 km/s"], ans: 1, exp: "c≈299 792 km/s" },
+    { q: "g = ?", opts: ["9.8 m/s²", "10.8 m/s²", "8.8 m/s²", "11.8 m/s²"], ans: 0, exp: "g=9.8 m/s²" },
+    { q: "Kuch o'lchov birligi?", opts: ["Joul", "Vatt", "Nyuton", "Pascal"], ans: 2, exp: "Nyuton (N)" },
+    { q: "Atom yadrosida nima?", opts: ["Elektron", "Proton+neytron", "Foton", "Kvark"], ans: 1, exp: "Proton va neytron" },
+    { q: "Elektr toki birligi?", opts: ["Vatt", "Amper", "Volt", "Om"], ans: 1, exp: "Amper (A)" },
+    { q: "Issiqlik birligi?", opts: ["Vatt", "Joul", "Nyuton", "Pascal"], ans: 1, exp: "Joul (J)" },
+    { q: "Magnit maydon qayerdan chiqadi?", opts: ["Janubdan", "Shimoldan", "Ikkisidan", "Hech biridan"], ans: 1, exp: "N (Shimol) qutbdan" },
+    { q: "Snell qonuni?", opts: ["n₁sinθ₁=n₂sinθ₂", "n₁cosθ₁=n₂cosθ₂", "n₁tanθ₁=n₂tanθ₂", "Boshqa"], ans: 0, exp: "n₁sinθ₁ = n₂sinθ₂" },
+  ],
+  chemistry: [
+    { q: "Suv formulasi?", opts: ["CO2", "H2O", "O2", "NaCl"], ans: 1, exp: "H₂O" },
+    { q: "Osh tuzi formulasi?", opts: ["NaCl", "KCl", "CaCl", "MgCl"], ans: 0, exp: "NaCl" },
+    { q: "Oltin belgisi?", opts: ["Go", "Au", "Or", "Ag"], ans: 1, exp: "Au" },
+    { q: "Eng yengil element?", opts: ["Heliy", "Vodorod", "Litiy", "Uglerod"], ans: 1, exp: "Vodorod" },
+    { q: "Kislota litmusni?", opts: ["Ko'k", "Qizil", "Sariq", "Yashil"], ans: 1, exp: "Qizil rangga" },
+    { q: "Mendeleyev jadvalidagi elementlar?", opts: ["108", "118", "128", "98"], ans: 1, exp: "118 ta" },
+    { q: "pH=7 qanday muhit?", opts: ["Kislotali", "Ishqoriy", "Neytral", "Asosli"], ans: 2, exp: "Neytral" },
+    { q: "CO₂ nomi?", opts: ["Uglerod oksid", "Karbonat angidrid", "Karbon dioksid", "Ikkalasi"], ans: 2, exp: "Karbon dioksid" },
+  ],
+  english: [
+    { q: "'Kitob' inglizcha?", opts: ["Notebook", "Booklet", "Book", "Copy"], ans: 2, exp: "Book = kitob" },
+    { q: "'He ___ a doctor'?", opts: ["am", "are", "is", "be"], ans: 2, exp: "He/She/It + is" },
+    { q: "'Beautiful' sinonimi?", opts: ["Ugly", "Pretty", "Strange", "Boring"], ans: 1, exp: "Pretty = Beautiful" },
+    { q: "'Yesterday' ma'nosi?", opts: ["Ertaga", "Kecha", "Bugun", "Hozir"], ans: 1, exp: "Yesterday = kecha" },
+    { q: "Present Perfect: 'I ___ eaten'?", opts: ["have", "has", "had", "am"], ans: 0, exp: "I + have + V3" },
+    { q: "'Fast' ravishi?", opts: ["Fastly", "Faster", "Fast", "Fastest"], ans: 2, exp: "Fast o'zgarmaydi" },
+    { q: "'Apple' ko'pligi?", opts: ["Apples", "Applees", "Aplex", "Applys"], ans: 0, exp: "Apples" },
+    { q: "'Ambitious' antonimi?", opts: ["Lazy", "Active", "Clever", "Smart"], ans: 0, exp: "Lazy = dangasa" },
+  ],
+  all: []
+};
+QDB.all = [...QDB.math, ...QDB.biology, ...QDB.history, ...QDB.geography, ...QDB.physics, ...QDB.chemistry, ...QDB.english];
+
+// Logic/IQ savollar
+const LOGIC_DB = [
+  { type: "Mantiq", color: "rgba(124,58,237,.1)", textColor: "#7c3aed", q: "Barcha A lar B dir. Barcha B lar C dir. Demak...", opts: ["Barcha A lar C dir", "Ba'zi A lar C dir", "Hech qaysi A C emas", "Aniqlab bo'lmaydi"], ans: 0, exp: "Sillogizm: A→B→C, demak A→C" },
+  { type: "IQ", color: "rgba(37,99,235,.1)", textColor: "var(--brand)", q: "Mening ukamning otasining singlisi kim?", opts: ["Amovakim", "Xolam", "Onaginam", "Bibi"], ans: 0, exp: "Ukamning otasi = mening otam → singlisi = amovakim" },
+  { type: "Mantiq", color: "rgba(124,58,237,.1)", textColor: "#7c3aed", q: "Agar 5 mushuk 5 daqiqada 5 sichqon tutilasa, 100 mushuk 100 daqiqada nechta tutadi?", opts: ["100", "500", "2000", "10000"], ans: 2, exp: "1 mushuk 5 daqiqada 1 sichqon → 100 daqiqada 20 → 100 mushuk × 20 = 2000" },
+  { type: "Ketma-ket", color: "rgba(5,150,105,.1)", textColor: "var(--green)", q: "2, 4, 8, 16, 32... Keyingisi?", opts: ["48", "64", "60", "72"], ans: 1, exp: "Geometrik: ×2" },
+  { type: "IQ", color: "rgba(37,99,235,.1)", textColor: "var(--brand)", q: "Qanotli ot ov hayvon emas. Barcha ov hayvonlar tez yuguradi. Xulosa?", opts: ["Qanotli ot tez yuguradi", "Qanotli ot tez yugurmasligi mumkin", "Barcha otlar qanotli", "Hech nima"], ans: 1, exp: "Ov hayvon emas → qoida unga taalluqli emas" },
+  { type: "Mantiq", color: "rgba(124,58,237,.1)", textColor: "#7c3aed", q: "Sog'lom odamlar sport qiladi. Sardor sport qiladi. Demak Sardor...?", opts: ["Sog'lom", "Kasal", "Ishchi", "Aniqlab bo'lmaydi"], ans: 3, exp: "Noto'g'ri sillogizm" },
+  { type: "IQ", color: "rgba(37,99,235,.1)", textColor: "var(--brand)", q: "8 ta tuxum: 3 tasini sindirding, 3 tasini pishirding, 2 tasini yeding. Qancha qoldi?", opts: ["0", "3", "5", "2"], ans: 0, exp: "Hammasi sarflandi" },
+  { type: "Mantiq", color: "rgba(124,58,237,.1)", textColor: "#7c3aed", q: "Agar kecha ertalabdan keyin ertangi kun bo'lsa, hozir qaysi kun?", opts: ["Dushanba", "Seshanba", "Chorshanba", "Payshanba"], ans: 1, exp: "Seshanba" },
+  { type: "Ketma-ket", color: "rgba(5,150,105,.1)", textColor: "var(--green)", q: "1, 1, 2, 3, 5, 8, 13... Keyingisi?", opts: ["18", "20", "21", "24"], ans: 2, exp: "Fibonachi: 8+13=21" },
+  { type: "IQ", color: "rgba(37,99,235,.1)", textColor: "var(--brand)", q: "5 bolaning o'rtacha yoshi 10. Yana 15 yoshli bola qo'shilsa?", opts: ["10.8", "11", "11.7", "12"], ans: 0, exp: "65÷6≈10.83" },
+  { type: "Mantiq", color: "rgba(124,58,237,.1)", textColor: "#7c3aed", q: "Tasdiq va inkoridan faqat bittasi to'g'ri. Qaysi qonun?", opts: ["Tavtologiya", "Ziddiyat", "Uchinchi holat yo'q", "Sababiyat"], ans: 2, exp: "Uchinchi holat yo'q qonuni" },
+  { type: "Matematik", color: "rgba(217,119,6,.1)", textColor: "var(--gold)", q: "Otaning 3 farzandi bor. Har birining 2 tadan singlisi bor. Jami bola?", opts: ["6", "8", "5", "9"], ans: 2, exp: "3 o'g'il + 2 qiz = 5 bola" },
+];
+
+// Analogy savollar
+const ANALOGY_DB = [
+  { q: "Kitob : O'qituvchi = Asbob : ?", opts: ["Usta", "Bola", "Zavod", "Maktab"], ans: 0, exp: "Kitob o'qituvchi uchun, Asbob usta uchun" },
+  { q: "Suv : Ichmoq = Non : ?", opts: ["Pishirmoq", "Yemoq", "Sotmoq", "Ko'rmoq"], ans: 1, exp: "Suv ichiladi, Non yeyiladi" },
+  { q: "Tun : Qorong'i = Kun : ?", opts: ["Quyosh", "Yorug'", "Issiq", "Ko'k"], ans: 1, exp: "Tun qorong'i, Kun yorug'" },
+  { q: "Atom : Molekula = Harf : ?", opts: ["So'z", "Gap", "Kitob", "Alifbo"], ans: 0, exp: "Atomlar molekula, harflar so'z" },
+  { q: "Rassom : Rasm = Yozuvchi : ?", opts: ["Qalem", "Kitob", "Kino", "Musiqa"], ans: 1, exp: "Rassom rasm, yozuvchi kitob" },
+  { q: "Muzlatgich : Sovuq = Pechka : ?", opts: ["Issiq", "Yonilg'i", "Oshxona", "Metall"], ans: 0, exp: "Muzlatgich sovuq, Pechka issiq" },
+  { q: "Ko'z : Ko'rmoq = Quloq : ?", opts: ["O'rganmoq", "Eshitmoq", "Hidlamoq", "Sezmoq"], ans: 1, exp: "Ko'z ko'radi, quloq eshitadi" },
+  { q: "Tosh : Qattiq = Paxta : ?", opts: ["Yumshoq", "Oq", "Yengil", "Uzun"], ans: 0, exp: "Tosh qattiq, Paxta yumshoq" },
+  { q: "Maktab : Ta'lim = Shifoxona : ?", opts: ["Davo", "Shifokor", "Bemor", "Dori"], ans: 0, exp: "Maktab ta'lim, Shifoxona davo" },
+  { q: "Mushuk : Miyovlamoq = It : ?", opts: ["Sakramoq", "Hurmoq", "Yugurmoq", "O'ynamoq"], ans: 1, exp: "Mushuk miyov, it huradi" },
+  { q: "Qo'l : Bilakuzuk = Oyoq : ?", opts: ["Tufli", "Bilakuzuk", "Shim", "Ko'ylak"], ans: 0, exp: "Qo'lga bilakuzuk, oyoqqa tufli" },
+  { q: "Quyosh : Planeta = Atom : ?", opts: ["Elektron", "Neytron", "Yadro", "Molekula"], ans: 0, exp: "Quyosh atrofida planetalar, Atom atrofida elektronlar" },
+];
+
+// Sequence savollar
+const SEQ_DB = [
+  { seq: [2, 4, 8, 16, 32], ans: 64, opts: [48, 60, 64, 72], hint: "Har son oldingisidan 2 baravar katta" },
+  { seq: [1, 1, 2, 3, 5, 8], ans: 13, opts: [11, 12, 13, 14], hint: "Har son ikkita oldingisining yig'indisi" },
+  { seq: [3, 6, 9, 12, 15], ans: 18, opts: [16, 17, 18, 20], hint: "Har safar 3 qo'shiladi" },
+  { seq: [100, 50, 25, 12.5], ans: 6.25, opts: [6, 6.25, 6.5, 7], hint: "Har son oldingisidan 2 baravar kichik" },
+  { seq: [1, 4, 9, 16, 25], ans: 36, opts: [32, 35, 36, 42], hint: "1², 2², 3², 4², 5²..." },
+  { seq: [2, 3, 5, 7, 11], ans: 13, opts: [12, 13, 14, 15], hint: "Tub sonlar" },
+  { seq: [5, 10, 20, 40], ans: 80, opts: [60, 70, 80, 100], hint: "Har biri 2 ga ko'paytiriladi" },
+  { seq: [1, 3, 7, 15, 31], ans: 63, opts: [55, 60, 63, 65], hint: "×2+1" },
+  { seq: [10, 9, 7, 4], ans: 0, opts: [0, 1, 2, 3], hint: "Ayiriladigan son: -1, -2, -3, -4" },
+  { seq: [1, 8, 27, 64], ans: 125, opts: [100, 115, 125, 150], hint: "1³, 2³, 3³, 4³..." },
+  { seq: [2, 6, 18, 54], ans: 162, opts: [108, 162, 180, 216], hint: "×3" },
+];
+
+// Wordle so'zlar
+const W5 = ["OLIMA", "DARYO", "QOZON", "ATLAS", "MAKON", "TARIX", "HAYOT", "ILMIY", "BAHOR", "QALAM", "SABAB", "NIYAT", "DUNYO", "ZAMON", "TILLO", "MUROD"];
+
+// Flashcard ma'lumotlar
+const FLASH_DB = [
+  { q: "Atom", a: "Moddaning eng kichik kimyoviy zarrachasi", cat: "Kimyo" },
+  { q: "Mitosis", a: "Hujayra bo'linishining asosiy usuli", cat: "Biologiya" },
+  { q: "Fotosintez", a: "CO₂ + H₂O + yorug'lik → C₆H₁₂O₆ + O₂", cat: "Biologiya" },
+  { q: "Newton I qonuni", a: "Tashqi kuch bo'lmasa, jism tinch yoki tekis harakatda", cat: "Fizika" },
+  { q: "E = mc²", a: "Massa-energiya ekvivalentligi", cat: "Fizika" },
+  { q: "pH", a: "Kislota-ishqor ko'rsatkichi. 0-14", cat: "Kimyo" },
+  { q: "Algoritm", a: "Muammoni yechish uchun tartibli qadamlar", cat: "Informatika" },
+  { q: "Sillogizm", a: "Mantiqiy xulosa chiqarish usuli", cat: "Mantiq" },
+  { q: "Integratsiya", a: "Matematikada yig'indi topish (∫)", cat: "Matematika" },
+  { q: "DNA → RNA → Protein", a: "Markaziy dogma", cat: "Biologiya" },
+  { q: "Osmoz", a: "Suvning yarim o'tkazuvchan membranadan diffuziyasi", cat: "Biologiya" },
+  { q: "Gravitatsiya", a: "F = Gm₁m₂/r²", cat: "Fizika" },
+  { q: "Oxidlanish", a: "Elektron yo'qotish jarayoni", cat: "Kimyo" },
+  { q: "Homeostaz", a: "Organizmning ichki muhit doimiyligi", cat: "Biologiya" },
+  { q: "Logarifm", a: "log₁₀(100)=2 chunki 10²=100", cat: "Matematika" },
+  { q: "Ventilyatsiya", a: "O'pkada havo almashinuvi", cat: "Biologiya" },
+  { q: "Elektroliz", a: "Elektr toki orqali kimyoviy parchalanish", cat: "Kimyo" },
+  { q: "Momentum", a: "p = mv. Massa va tezlik ko'paytmasi", cat: "Fizika" },
+  { q: "Axiom", a: "Isbotsiz qabul qilinadigan haqiqat", cat: "Mantiq" },
+  { q: "Simbioz", a: "Ikki turli organizmning manfaatli yashashi", cat: "Biologiya" },
+];
+
+// Sudoku puzzle
+const SUDOKU_PUZZLES = [
+  [5,3,0,0,7,0,0,0,0, 6,0,0,1,9,5,0,0,0, 0,9,8,0,0,0,0,6,0, 8,0,0,0,6,0,0,0,3, 4,0,0,8,0,3,0,0,1, 7,0,0,0,2,0,0,0,6, 0,6,0,0,0,0,2,8,0, 0,0,0,4,1,9,0,0,5, 0,0,0,0,8,0,0,7,9],
+];
+const SUDOKU_SOLVED = [
+  [5,3,4,6,7,8,9,1,2, 6,7,2,1,9,5,3,4,8, 1,9,8,3,4,2,5,6,7, 8,5,9,7,6,1,4,2,3, 4,2,6,8,5,3,7,9,1, 7,1,3,9,2,4,8,5,6, 9,6,1,5,3,7,2,8,4, 2,8,7,4,1,9,6,3,5, 3,4,5,2,8,6,1,7,9],
+];
+
+// Memory icons
+const MEM_SVGS = [
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2"><path d="M9 3h6l1 9H8L9 3z"/><path d="M8 12c-2 2-3 4-3 6a7 7 0 0 0 14 0c0-2-1-4-3-6"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83"/></svg>`,
+  `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+];
+const MEM_BACK_SVG = `<svg class="mem-svg" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`;
+
+// ═══════════════════════════════════════════
+// SEED SCORES
+// ═══════════════════════════════════════════
+function seedScores() {
+  const sc = getScores();
+  if (sc._seeded) return;
+  const demos = [
+    { name: 'Malika L.', quiz: 920, logic: 780, math: 840, sequence: 650, memory: 720 },
+    { name: 'Jasur T.', quiz: 880, logic: 840, math: 920, sequence: 580, memory: 640 },
+    { name: 'Nodira K.', quiz: 750, logic: 860, math: 680, sequence: 700, memory: 860 },
+    { name: 'Sanjar R.', quiz: 830, logic: 720, math: 760, sequence: 490, memory: 520 },
+    { name: 'Dilnoza A.', quiz: 690, logic: 930, math: 590, sequence: 620, memory: 730 },
+    { name: 'Bobur M.', quiz: 960, logic: 810, math: 900, sequence: 740, memory: 810 },
+    { name: 'Zulfiya H.', quiz: 720, logic: 670, math: 630, sequence: 550, memory: 670 },
+    { name: 'Akbar N.', quiz: 810, logic: 790, math: 850, sequence: 680, memory: 590 },
+  ];
+  demos.forEach(d => {
+    sc['_d' + d.name] = {
+      name: d.name,
+      quiz: [{ score: d.quiz }],
+      logic: [{ score: d.logic }],
+      math: [{ score: d.math }],
+      sequence: [{ score: d.sequence }],
+      memory: [{ score: d.memory }],
+      games: 15,
+      wins: 9,
+    };
+  });
+  sc._seeded = true;
+  saveScores(sc);
+}
+seedScores();
+
+function seedAdminUser() {
+  const users = getUsers();
+  if (!users.find(u => u.email === 'admin@brain.uz')) {
+    users.push({
+      name: 'Admin',
+      email: 'admin@brain.uz',
+      password: 'admin123',
+      coins: 0,
+      games: 0,
+      wins: 0,
+      bestScore: 0,
+      streak: 0,
+      history: [],
+      registeredAt: new Date().toLocaleString('uz-UZ'),
+      visitCount: 0,
+      isAdmin: true,
+    });
+    saveUsers(users);
+  }
+}
+seedAdminUser();
+
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  err.classList.remove('show');
+  if (!email || !pass) { err.textContent = "Barcha maydonlarni to'ldiring"; err.classList.add('show'); return; }
+  const user = getUsers().find(u => u.email === email && u.password === pass);
+  if (!user) { err.textContent = "Email yoki parol noto'g'ri"; err.classList.add('show'); return; }
+  user.lastLogin = new Date().toLocaleString('uz-UZ');
+  user.visitCount = (user.visitCount || 0) + 1;
+  CU = user;
+  recordRegisteredActivity(email);
+  saveSession(email);
+  saveCU();
+  closeModal();
+  updateUI();
+  showToast('ok', 'Xush kelibsiz, ' + user.name + '!');
+  if (document.getElementById('page-profile').classList.contains('active')) renderProfile();
+  if (document.getElementById('page-leaderboard').classList.contains('active')) renderBoard('quiz');
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const err = document.getElementById('regErr');
+  err.classList.remove('show');
+  if (!name || !email || !pass) { err.textContent = "Barcha maydonlarni to'ldiring"; err.classList.add('show'); return; }
+  if (pass.length < 6) { err.textContent = "Parol kamida 6 belgi"; err.classList.add('show'); return; }
+  const users = getUsers();
+  if (users.find(u => u.email === email)) { err.textContent = "Bu email allaqachon ro'yxatdan o'tgan"; err.classList.add('show'); return; }
+  const nu = {
+    name,
+    email,
+    password: pass,
+    coins: 0,
+    games: 0,
+    wins: 0,
+    bestScore: 0,
+    streak: 0,
+    history: [],
+    registeredAt: new Date().toLocaleString('uz-UZ'),
+    visitCount: 1,
+    lastLogin: new Date().toLocaleString('uz-UZ'),
+    isAdmin: false,
+  };
+  users.push(nu);
+  saveUsers(users);
+  const stats = getSiteStats();
+  rollStatsToToday(stats);
+  stats.todayNew = (stats.todayNew || 0) + 1;
+  stats.todayRegistrations = (stats.todayRegistrations || 0) + 1;
+  saveSiteStats(stats);
+  recordRegisteredActivity(email);
+  CU = nu;
+  saveSession(email);
+  closeModal();
+  updateUI();
+  showToast('ok', 'Xush kelibsiz, ' + name + '!');
+  if (document.getElementById('page-profile').classList.contains('active')) renderProfile();
+}
+
+function doLogout() {
+  CU = null;
+  clearSession();
+  updateUI();
+  showPage('home');
+  showToast('ok', 'Chiqildi');
+}
+
+function tryAutoLogin() {
+  const email = getSession();
+  if (!email) return;
+  const user = getUsers().find(u => u.email === email);
+  if (user) { CU = user; updateUI(); }
+}
+
+function updateUI() {
+  updateSidebar();
+  updateTopbar();
+}
+
+function updateSidebar() {
+  const el = document.getElementById('sidebarAuth');
+  const adminNav = document.getElementById('navAdmin');
+  if (CU) {
+    el.innerHTML = `
+      <div class="user-card" onclick="showPage('profile')">
+        <div class="user-av">${CU.name[0].toUpperCase()}</div>
+        <div>
+          <div class="user-name">${CU.name}</div>
+          <div class="user-email">${CU.email}</div>
+        </div>
+      </div>
+    `;
+    if (adminNav) {
+      adminNav.classList.toggle('hide', !CU.isAdmin);
+    }
+  } else {
+    el.innerHTML = `
+      <div class="sidebar-auth">
+        <button class="btn-login" onclick="openModal('login')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Kirish
+        </button>
+        <button class="btn-register" onclick="openModal('register')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Ro'yxatdan o'tish
+        </button>
+      </div>
+    `;
+    if (adminNav) {
+      adminNav.classList.add('hide');
+    }
+  }
+}
+
+function updateTopbar() {
+  const scoreEl = document.getElementById('topbarScore');
+  if (CU) {
+    scoreEl.style.display = 'flex';
+    document.getElementById('topbarScoreNum').textContent = CU.coins || 0;
+  } else {
+    scoreEl.style.display = 'none';
+  }
+}
+
+function saveCU() {
+  if (!CU) return;
+  const users = getUsers();
+  const i = users.findIndex(u => u.email === CU.email);
+  if (i > -1) { users[i] = CU; saveUsers(users); }
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+
+  document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-page="${name}"]`);
+  if (navItem) navItem.classList.add('active');
+
+  const bc = { home: 'Bosh sahifa', games: "O'yinlar", leaderboard: 'Reyting', profile: 'Profil', admin: 'Admin panel' };
+  document.getElementById('breadcrumb').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>${bc[name] || name}</span>`;
+
+  if (name === 'leaderboard') renderBoard('quiz');
+  if (name === 'profile') renderProfile();
+  if (name === 'admin') renderAdmin();
+
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  window.scrollTo(0, 0);
+}
+
+function selSubj(s) { selectedSubj = s; }
+
+function closeArena() {
+  clearAllTimers();
+  const arena = document.getElementById('arena');
+  if (arena) arena.style.display = 'none';
+  const grid = document.getElementById('gameSelectGrid');
+  if (grid) grid.classList.remove('hide');
+  CG = null;
+}
+
+// ═══════════════════════════════════════════
+// MODALS & TOAST
+// ═══════════════════════════════════════════
+function openModal(t) {
+  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('mLogin').classList.toggle('hide', t !== 'login');
+  document.getElementById('mRegister').classList.toggle('hide', t !== 'register');
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  document.getElementById('resultBg').classList.remove('open');
+}
+
+let toastTimer;
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function showResult(color, bgColor, score, gameName) {
+  document.getElementById('resIcon').style.background = bgColor;
+  document.getElementById('resIcon').innerHTML = `<svg viewBox="0 0 24 24" fill="${color}"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.8-5.5-3-5.5 3 1-6.8L3 8.9 9 8l3-6z"/></svg>`;
+  document.getElementById('resTitle').textContent = score > 500 ? "Ajoyib natija!" : score > 200 ? "Yaxshi!" : "Davom eting!";
+  document.getElementById('resScore').textContent = score;
+  document.getElementById('resSub').textContent = 'ball yig\'dingiz — ' + gameName;
+  document.getElementById('resultBg').classList.add('open');
+  if (CU) updateUI();
+}
+
+function recordScore(gameType, score) {
+  if (!CU) return;
+  const sc = getScores();
+  const key = CU.email;
+  if (!sc[key]) sc[key] = { name: CU.name };
+  if (!sc[key][gameType]) sc[key][gameType] = [];
+  sc[key][gameType].push({ score, date: Date.now() });
+  sc[key].games = (sc[key].games || 0) + 1;
+  saveScores(sc);
+  CU.coins = (CU.coins || 0) + score;
+  CU.games = (CU.games || 0) + 1;
+  CU.wins = (CU.wins || 0) + (score > 300 ? 1 : 0);
+  CU.bestScore = Math.max(CU.bestScore || 0, score);
+  if (!CU.history) CU.history = [];
+  CU.history.unshift({ game: GAME_NAMES[gameType] || gameType, score, date: new Date().toLocaleDateString('uz-UZ') });
+  if (CU.history.length > 12) CU.history.pop();
+  saveCU();
+}
+
+// ═══════════════════════════════════════════
+// GAME MANAGER
+// ═══════════════════════════════════════════
+const GAME_NAMES = {
+  quiz: 'Viktorina', memory: "Xotira o'yini", rope: 'Arqon tortish',
+  wordle: 'Wordle', math: 'Tez Matematika', sequence: 'Son ketma-ketligi',
+  analogy: "So'z Analogiyasi", logic: 'Mantiq & IQ', flashcard: 'Flashcard', sudoku: 'Sudoku',
+};
+const GAME_BADGES = {
+  quiz: '📝 Fan', memory: '🃏 Xotira', rope: '🤝 Jamoa', wordle: '📝 So\'z',
+  math: '⚡ Tez', sequence: '🔢 Ketma-ketlik', analogy: '🔗 Analogiya',
+  logic: '🧠 Mantiq', flashcard: '📚 O\'rganish', sudoku: '🔲 Puzzle',
+};
+const GAME_BADGE_COLORS = {
+  quiz: 'rgba(37,99,235,.1)', memory: 'rgba(225,29,72,.1)', rope: 'rgba(37,99,235,.1)',
+  wordle: 'rgba(5,150,105,.1)', math: 'rgba(217,119,6,.1)', sequence: 'rgba(37,99,235,.1)',
+  analogy: 'rgba(217,119,6,.1)', logic: 'rgba(124,58,237,.1)',
+  flashcard: 'rgba(5,150,105,.1)', sudoku: 'rgba(8,145,178,.1)',
+};
+
+function startGame(type) {
+  if (!CU) { openModal('login'); showToast('err', 'O\'ynash uchun kirishingiz kerak'); return; }
+  CG = type;
+  clearAllTimers();
+  showPage('games');
+
+  const arena = document.getElementById('arena');
+  const grid = document.getElementById('gameSelectGrid');
+  if (arena) arena.style.display = 'block';
+  if (grid) grid.classList.add('hide');
+
+  const titleEl = document.getElementById('arenaTitle');
+  if (titleEl) titleEl.textContent = GAME_NAMES[type] || type;
+
+  const badge = document.getElementById('arenaBadge');
+  if (badge) {
+    badge.textContent = GAME_BADGES[type] || '';
+    badge.style.background = GAME_BADGE_COLORS[type] || '';
+    badge.style.color = 'var(--text2)';
+    badge.style.padding = '4px 10px';
+    badge.style.borderRadius = '7px';
+    badge.style.fontSize = '11px';
+    badge.style.fontWeight = '700';
+  }
+
+  const gameIds = ['gQuiz', 'gMemory', 'gRope', 'gWordle', 'gMath', 'gSequence', 'gAnalogy', 'gLogic', 'gFlash', 'gSudoku'];
+  gameIds.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hide'); });
+
+  const map = {
+    quiz: 'gQuiz', memory: 'gMemory', rope: 'gRope', wordle: 'gWordle',
+    math: 'gMath', sequence: 'gSequence', analogy: 'gAnalogy',
+    logic: 'gLogic', flashcard: 'gFlash', sudoku: 'gSudoku',
+  };
+
+  const gameEl = document.getElementById(map[type]);
+  if (gameEl) gameEl.classList.remove('hide');
+
+  const initFns = {
+    quiz: initQuiz, memory: initMemory, rope: initRope, wordle: initWordle,
+    math: initMath, sequence: initSequence, analogy: initAnalogy,
+    logic: initLogic, flashcard: initFlash, sudoku: initSudoku,
+  };
+
+  if (initFns[type]) initFns[type]();
+}
+
+function replayCurrentGame() {
+  document.getElementById('resultBg').classList.remove('open');
+  if (CG) startGame(CG);
+}
+
+function goGamesFromResult() {
+  document.getElementById('resultBg').classList.remove('open');
+  closeArena();
+}
+
+// ═══════════════════════════════════════════
+// QUIZ GAME
+// ═══════════════════════════════════════════
+const SUBJ_CONFIG = {
+  all: { label: 'Aralash', c: 'rgba(37,99,235,.1)', tc: 'var(--brand)' },
+  math: { label: 'Matematika', c: 'rgba(37,99,235,.1)', tc: 'var(--brand)' },
+  biology: { label: 'Biologiya', c: 'rgba(5,150,105,.1)', tc: 'var(--green)' },
+  history: { label: 'Tarix', c: 'rgba(217,119,6,.1)', tc: 'var(--gold)' },
+  geography: { label: 'Geografiya', c: 'rgba(8,145,178,.1)', tc: 'var(--cyan)' },
+  physics: { label: 'Fizika', c: 'rgba(124,58,237,.1)', tc: 'var(--purple)' },
+  chemistry: { label: 'Kimyo', c: 'rgba(225,29,72,.1)', tc: 'var(--rose)' },
+  english: { label: 'Ingliz tili', c: 'rgba(8,145,178,.1)', tc: 'var(--cyan)' },
+};
+
+let QS = { idx: 0, score: 0, timer: null, answered: false, qs: [] };
+
+function initQuiz() {
+  QS = { idx: 0, score: 0, timer: null, answered: false };
+  const pool = shuffle(QDB[selectedSubj] || QDB.all);
+  QS.qs = pool.slice(0, 10);
+  document.getElementById('qScore').textContent = '0';
+  const cfg = SUBJ_CONFIG[selectedSubj] || SUBJ_CONFIG.all;
+  const p = document.getElementById('qSubjPill');
+  p.textContent = cfg.label;
+  p.style.background = cfg.c;
+  p.style.color = cfg.tc;
+  p.style.padding = '4px 10px';
+  p.style.borderRadius = '7px';
+  p.style.fontSize = '11px';
+  p.style.fontWeight = '700';
+  showQQ(0);
+}
+
+function showQQ(i) {
+  if (i >= QS.qs.length) { endQuiz(); return; }
+  QS.idx = i;
+  QS.answered = false;
+  const q = QS.qs[i];
+  document.getElementById('qNum').textContent = `Savol ${i + 1} / ${QS.qs.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qProg').style.width = ((i / QS.qs.length) * 100) + '%';
+  document.getElementById('qFb').className = 'quiz-fb';
+  document.getElementById('qNext').classList.remove('show');
+  const letters = ['A', 'B', 'C', 'D'];
+  document.getElementById('qOpts').innerHTML = q.opts.map((o, j) => `<button class="quiz-opt" onclick="answerQ(${j})" id="qq${j}"><span class="opt-letter">${letters[j]}</span>${o}</button>`).join('');
+  startQTimer();
+}
+
+function startQTimer() {
+  clearInterval(QS.timer);
+  let t = 15;
+  document.getElementById('qTimer').textContent = t;
+  const timer = setInterval(() => {
+    t--;
+    document.getElementById('qTimer').textContent = t;
+    if (t <= 0) { clearInterval(timer); if (!QS.answered) timeoutQ(); }
+  }, 1000);
+  QS.timer = timer;
+  allTimers.push(timer);
+}
+
+function timeoutQ() {
+  QS.answered = true;
+  const q = QS.qs[QS.idx];
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  document.getElementById('qq' + q.ans).classList.add('correct');
+  const fb = document.getElementById('qFb');
+  fb.className = 'quiz-fb show no';
+  fb.innerHTML = '⏰ Vaqt tugadi! ' + q.exp;
+  document.getElementById('qNext').classList.add('show');
+}
+
+function answerQ(i) {
+  if (QS.answered) return;
+  clearInterval(QS.timer);
+  QS.answered = true;
+  const q = QS.qs[QS.idx];
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('qFb');
+  if (i === q.ans) {
+    const bonus = parseInt(document.getElementById('qTimer').textContent) * 10;
+    QS.score += 100 + bonus;
+    document.getElementById('qScore').textContent = QS.score;
+    document.getElementById('qq' + i).classList.add('correct');
+    fb.className = 'quiz-fb show ok';
+    fb.innerHTML = '✅ To\'g\'ri! +' + (100 + bonus) + ' ball. ' + q.exp;
+  } else {
+    document.getElementById('qq' + i).classList.add('wrong');
+    document.getElementById('qq' + q.ans).classList.add('correct');
+    fb.className = 'quiz-fb show no';
+    fb.innerHTML = '❌ Noto\'g\'ri. ' + q.exp;
+  }
+  document.getElementById('qNext').classList.add('show');
+}
+
+function nextQ() {
+  document.getElementById('qNext').classList.remove('show');
+  showQQ(QS.idx + 1);
+}
+
+function endQuiz() {
+  recordScore('quiz', QS.score);
+  showResult('#2563eb', 'rgba(37,99,235,.12)', QS.score, 'Viktorina');
+}
+
+// ═══════════════════════════════════════════
+// MEMORY GAME
+// ═══════════════════════════════════════════
+let MS = { moves: 0, matched: 0, flipped: [], locked: false, icons: [] };
+
+function initMemory() {
+  MS = { moves: 0, matched: 0, flipped: [], locked: false };
+  document.getElementById('mMoves').textContent = '0';
+  document.getElementById('mMatched').textContent = '0';
+  const icons = shuffle([...MEM_SVGS, ...MEM_SVGS]);
+  MS.icons = icons;
+  document.getElementById('memGrid').innerHTML = icons.map((svg, i) => `
+    <div class="mem-card" id="mc${i}" onclick="flipMem(${i})">
+      <div class="mem-back">${MEM_BACK_SVG}</div>
+      <div class="mem-front">${svg}</div>
+    </div>
+  `).join('');
+}
+
+function flipMem(i) {
+  if (MS.locked) return;
+  const c = document.getElementById('mc' + i);
+  if (c.classList.contains('flipped') || c.classList.contains('matched')) return;
+  c.classList.add('flipped');
+  MS.flipped.push(i);
+  if (MS.flipped.length === 2) {
+    MS.locked = true;
+    MS.moves++;
+    document.getElementById('mMoves').textContent = MS.moves;
+    const [a, b] = MS.flipped;
+    if (MS.icons[a] === MS.icons[b]) {
+      setTimeout(() => {
+        document.getElementById('mc' + a).classList.add('matched');
+        document.getElementById('mc' + b).classList.add('matched');
+        MS.matched++;
+        document.getElementById('mMatched').textContent = MS.matched;
+        MS.flipped = [];
+        MS.locked = false;
+        if (MS.matched === 8) {
+          const s = Math.max(100, 1000 - MS.moves * 25);
+          recordScore('memory', s);
+          showResult('#e11d48', 'rgba(225,29,72,.1)', s, "Xotira o'yini");
+        }
+      }, 400);
+    } else {
+      setTimeout(() => {
+        document.getElementById('mc' + a).classList.remove('flipped');
+        document.getElementById('mc' + b).classList.remove('flipped');
+        MS.flipped = [];
+        MS.locked = false;
+      }, 850);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════
+// ROPE GAME
+// ═══════════════════════════════════════════
+let RS = { pos: 50, blue: 0, red: 0, qi: 0, qs: [], timer: null, active: false, blueAnswered: false, redAnswered: false, blueCorrect: false, redCorrect: false };
+const ROPE_Q_COUNT = 12, ROPE_TIME = 12;
+
+function initRope() {
+  RS = { pos: 50, blue: 0, red: 0, qi: 0, qs: shuffle([...QDB.all]).slice(0, ROPE_Q_COUNT), timer: null, active: false, blueAnswered: false, redAnswered: false, blueCorrect: false, redCorrect: false };
+  updateRopeUI();
+  nextRopeQ();
+}
+
+function updateRopeUI() {
+  document.getElementById('rBlue').textContent = RS.blue;
+  document.getElementById('rRed').textContent = RS.red;
+  document.getElementById('rbBlue').style.width = RS.pos + '%';
+  document.getElementById('rbRed').style.width = (100 - RS.pos) + '%';
+  document.getElementById('rbDot').style.left = RS.pos + '%';
+}
+
+function nextRopeQ() {
+  if (RS.qi >= RS.qs.length || RS.pos <= 5 || RS.pos >= 95) { endRope(); return; }
+  const q = RS.qs[RS.qi];
+  RS.blueAnswered = false; RS.redAnswered = false;
+  RS.blueCorrect = false; RS.redCorrect = false;
+  RS.active = true;
+
+  document.getElementById('ropeQLBlue').textContent = q.q;
+  document.getElementById('ropeQLRed').textContent = q.q;
+  document.getElementById('ropeQNum').textContent = `Savol ${RS.qi + 1} / ${ROPE_Q_COUNT}`;
+  document.getElementById('ropeStatus').innerHTML = '<span>⏳ Ikkala jamoa bir vaqtda javob beradi!</span>';
+
+  const bBadge = document.getElementById('ropeAnsweredBlue');
+  const rBadge = document.getElementById('ropeAnsweredRed');
+  bBadge.className = 'rope-answered-badge'; bBadge.textContent = '';
+  rBadge.className = 'rope-answered-badge'; rBadge.textContent = '';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const makeOpts = (prefix) => q.opts.map((o, i) => `<button class="rope-opt" id="${prefix}${i}" onclick="answerRope('${prefix}',${i})"><span class="opt-key">${letters[i]}</span>${o}</button>`).join('');
+  document.getElementById('ropeOptsBlue').innerHTML = makeOpts('rb_');
+  document.getElementById('ropeOptsRed').innerHTML = makeOpts('rr_');
+
+  let t = ROPE_TIME;
+  document.getElementById('ropeTimerFill').style.width = '100%';
+  document.getElementById('ropeTimerNum').textContent = t;
+  clearInterval(RS.timer);
+  const timer = setInterval(() => {
+    t--;
+    document.getElementById('ropeTimerNum').textContent = t;
+    document.getElementById('ropeTimerFill').style.width = (t / ROPE_TIME * 100) + '%';
+    if (t <= 0) { clearInterval(timer); if (RS.active) ropeTimeout(); }
+  }, 1000);
+  RS.timer = timer;
+  allTimers.push(timer);
+}
+
+function answerRope(prefix, i) {
+  const isBlue = prefix === 'rb_';
+  if (isBlue && RS.blueAnswered) return;
+  if (!isBlue && RS.redAnswered) return;
+  if (!RS.active) return;
+
+  const q = RS.qs[RS.qi];
+  const correct = i === q.ans;
+  const panelOptsId = isBlue ? 'ropeOptsBlue' : 'ropeOptsRed';
+  const badgeId = isBlue ? 'ropeAnsweredBlue' : 'ropeAnsweredRed';
+  const btnPrefix = isBlue ? 'rb_' : 'rr_';
+
+  document.querySelectorAll(`#${panelOptsId} .rope-opt`).forEach(b => b.disabled = true);
+  document.getElementById(btnPrefix + i).classList.add(correct ? 'panel-correct' : 'panel-wrong');
+  if (!correct) document.getElementById(btnPrefix + q.ans).classList.add('panel-correct');
+
+  const badge = document.getElementById(badgeId);
+  badge.textContent = correct ? '✅ To\'g\'ri!' : '❌ Noto\'g\'ri';
+  badge.className = 'rope-answered-badge show ' + (correct ? 'ok' : 'no');
+
+  if (isBlue) { RS.blueAnswered = true; RS.blueCorrect = correct; }
+  else { RS.redAnswered = true; RS.redCorrect = correct; }
+
+  if (!RS.blueAnswered || !RS.redAnswered) return;
+
+  clearInterval(RS.timer);
+  RS.active = false;
+  setTimeout(resolveRopeQuestion, 400);
+}
+
+function ropeTimeout() {
+  RS.active = false;
+  clearInterval(RS.timer);
+  if (!RS.blueAnswered) {
+    const q = RS.qs[RS.qi];
+    document.querySelectorAll('#ropeOptsBlue .rope-opt').forEach(b => b.disabled = true);
+    document.getElementById('rb_' + q.ans).classList.add('panel-correct');
+    const b = document.getElementById('ropeAnsweredBlue');
+    b.textContent = '⏰ Vaqt tugadi'; b.className = 'rope-answered-badge show no';
+    RS.blueAnswered = true; RS.blueCorrect = false;
+  }
+  if (!RS.redAnswered) {
+    const q = RS.qs[RS.qi];
+    document.querySelectorAll('#ropeOptsRed .rope-opt').forEach(b => b.disabled = true);
+    document.getElementById('rr_' + q.ans).classList.add('panel-correct');
+    const r = document.getElementById('ropeAnsweredRed');
+    r.textContent = '⏰ Vaqt tugadi'; r.className = 'rope-answered-badge show no';
+    RS.redAnswered = true; RS.redCorrect = false;
+  }
+  setTimeout(resolveRopeQuestion, 600);
+}
+
+function resolveRopeQuestion() {
+  const bC = RS.blueCorrect, rC = RS.redCorrect;
+  let statusMsg = '';
+  if (bC && !rC) { RS.pos = Math.max(5, RS.pos - 12); RS.blue++; statusMsg = '💙 Ko\'k jamoa to\'g\'ri!'; }
+  else if (rC && !bC) { RS.pos = Math.min(95, RS.pos + 12); RS.red++; statusMsg = '❤️ Qizil jamoa to\'g\'ri!'; }
+  else if (bC && rC) { statusMsg = '🤝 Ikkala jamoa ham to\'g\'ri!'; }
+  else { statusMsg = '😅 Ikkala jamoa ham noto\'g\'ri!'; }
+  document.getElementById('ropeStatus').innerHTML = `<span>${statusMsg}</span>`;
+  updateRopeUI();
+  RS.qi++;
+  if (RS.qi >= RS.qs.length || RS.pos <= 5 || RS.pos >= 95) setTimeout(endRope, 1400);
+  else setTimeout(nextRopeQ, 1600);
+}
+
+function endRope() {
+  clearInterval(RS.timer);
+  const blueWon = RS.pos < 50;
+  const score = blueWon ? Math.max(200, RS.blue * 120) : Math.max(200, RS.red * 120);
+  recordScore('rope', score);
+  showResult(blueWon ? '#2563eb' : '#e11d48', blueWon ? 'rgba(37,99,235,.12)' : 'rgba(225,29,72,.1)', score, 'Arqon tortish');
+}
+
+// ═══════════════════════════════════════════
+// WORDLE GAME
+// ═══════════════════════════════════════════
+let WS = { word: '', guesses: [], current: '', row: 0, done: false };
+const ROWS = 6, COLS = 5;
+
+function initWordle() {
+  const w = W5[Math.floor(Math.random() * W5.length)];
+  WS = { word: w, guesses: [], current: '', row: 0, done: false };
+  document.getElementById('wordleAttempts').textContent = 6;
+  document.getElementById('wordleMsg').className = 'wordle-msg';
+  renderWordleBoard();
+  renderWordleKb();
+}
+
+function renderWordleBoard() {
+  let html = '';
+  for (let r = 0; r < ROWS; r++) {
+    html += '<div class="wordle-row">';
+    for (let c = 0; c < COLS; c++) {
+      let cls = 'wordle-cell', ch = '';
+      if (r < WS.guesses.length) {
+        const g = WS.guesses[r];
+        ch = g.letters[c].char;
+        cls += ' ' + g.letters[c].state;
+      } else if (r === WS.row) {
+        ch = WS.current[c] || '';
+        if (ch) cls += ' filled';
+      }
+      html += `<div class="${cls}">${ch}</div>`;
+    }
+    html += '</div>';
+  }
+  document.getElementById('wordleBoard').innerHTML = html;
+}
+
+function renderWordleKb() {
+  const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+  const used = {};
+  WS.guesses.forEach(g => g.letters.forEach(l => {
+    if (!used[l.char] || used[l.char] === 'absent' || (used[l.char] === 'present' && l.state === 'correct')) {
+      used[l.char] = l.state;
+    }
+  }));
+  document.getElementById('wordleKb').innerHTML = rows.map(row =>
+    `<div class="wk-row">${row.split('').map(k => `<button class="wk-key ${used[k] || ''}" onclick="wordleKey('${k}')">${k}</button>`).join('')}</div>`
+  ).join('') + `<div class="wk-row"><button class="wk-key wide" onclick="wordleSubmit()">ENTER</button><button class="wk-key wide" onclick="wordleBack()">DEL</button></div>`;
+}
+
+function wordleKey(k) {
+  if (WS.done || WS.current.length >= COLS) return;
+  WS.current += k;
+  renderWordleBoard();
+}
+
+function wordleBack() {
+  if (WS.done) return;
+  WS.current = WS.current.slice(0, -1);
+  renderWordleBoard();
+}
+
+function wordleSubmit() {
+  if (WS.done || WS.current.length < COLS) return;
+  const guess = WS.current;
+  const used = [...WS.word];
+  const letters = guess.split('').map((c, i) => {
+    if (c === WS.word[i]) { used[i] = null; return { char: c, state: 'correct' }; }
+    if (used.includes(c)) { used[used.indexOf(c)] = null; return { char: c, state: 'present' }; }
+    return { char: c, state: 'absent' };
+  });
+  WS.guesses.push({ letters });
+  WS.current = ''; WS.row++;
+  document.getElementById('wordleAttempts').textContent = ROWS - WS.row;
+  const won = guess === WS.word;
+  if (won || WS.row >= ROWS) {
+    WS.done = true;
+    const msg = document.getElementById('wordleMsg');
+    msg.className = 'wordle-msg show ' + (won ? 'ok' : 'info');
+    msg.textContent = won ? `🎉 Zo'r! "${WS.word}" so'zini topdingiz!` : `😔 So'z: "${WS.word}". Qaytadan!`;
+    if (won) {
+      const sc = (ROWS - WS.row + 1) * 200;
+      recordScore('wordle', sc);
+      setTimeout(() => showResult('#059669', 'rgba(5,150,105,.12)', sc, 'Wordle'), 1200);
+    } else recordScore('wordle', 50);
+  }
+  renderWordleBoard();
+  renderWordleKb();
+}
+
+// ═══════════════════════════════════════════
+// MATH SPEED GAME
+// ═══════════════════════════════════════════
+let MATH = { score: 0, streak: 0, level: 1, a: 0, b: 0, op: '', ans: 0, opts: [], timer: null };
+const OPS = ['+', '-', '×'];
+
+function initMath() {
+  MATH = { score: 0, streak: 0, level: 1, a: 0, b: 0, op: '', ans: 0, opts: [], timer: null };
+  ['mathScore', 'mathStreak', 'mathLevel'].forEach(id => document.getElementById(id).textContent = id === 'mathLevel' ? '1' : '0');
+  document.getElementById('mathTimer').textContent = '60';
+  document.getElementById('mathFb').className = 'math-fb';
+  let t = 60;
+  const timer = setInterval(() => {
+    t--;
+    document.getElementById('mathTimer').textContent = t;
+    if (t <= 0) { clearInterval(timer); endMath(); }
+  }, 1000);
+  MATH.timer = timer;
+  allTimers.push(timer);
+  nextMath();
+}
+
+function nextMath() {
+  const lv = MATH.level;
+  const max = lv <= 2 ? 10 : lv <= 4 ? 20 : 50;
+  MATH.op = OPS[Math.floor(Math.random() * (lv <= 3 ? 2 : 3))];
+  MATH.a = Math.floor(Math.random() * max) + 1;
+  MATH.b = Math.floor(Math.random() * max) + 1;
+  if (MATH.op === '-' && MATH.b > MATH.a) [MATH.a, MATH.b] = [MATH.b, MATH.a];
+  if (MATH.op === '+') MATH.ans = MATH.a + MATH.b;
+  else if (MATH.op === '-') MATH.ans = MATH.a - MATH.b;
+  else { MATH.ans = MATH.a * MATH.b; }
+  document.getElementById('mathEq').textContent = `${MATH.a} ${MATH.op} ${MATH.b} = ?`;
+  document.getElementById('mathLvlLbl').textContent = `${MATH.level}-daraja • ${['Qo\'shish', 'Ayirish', 'Ko\'paytirish'][Math.min(MATH.level - 1, 2)]}`;
+  document.getElementById('mathInp').value = '';
+  const opts = new Set([MATH.ans]);
+  while (opts.size < 4) {
+    const f = MATH.ans + Math.floor(Math.random() * 21) - 10;
+    if (f !== MATH.ans && f >= 0) opts.add(f);
+  }
+  MATH.opts = shuffle([...opts]).slice(0, 4);
+  document.getElementById('mathOpts').innerHTML = MATH.opts.map((v, i) => `<button class="math-opt" onclick="mathPick(${i})">${v}</button>`).join('');
+}
+
+function checkMath() {
+  const v = parseInt(document.getElementById('mathInp').value);
+  if (isNaN(v)) return;
+  handleMath(v);
+}
+
+function mathPick(i) { handleMath(MATH.opts[i]); }
+
+function handleMath(v) {
+  const fb = document.getElementById('mathFb');
+  if (v === MATH.ans) {
+    MATH.streak++;
+    MATH.score += 10 + MATH.streak * 2;
+    if (MATH.streak % 5 === 0) MATH.level = Math.min(5, MATH.level + 1);
+    document.getElementById('mathScore').textContent = MATH.score;
+    document.getElementById('mathStreak').textContent = MATH.streak;
+    document.getElementById('mathLevel').textContent = MATH.level;
+    fb.textContent = '✅ To\'g\'ri! +' + (10 + MATH.streak * 2);
+    fb.className = 'math-fb show ok';
+  } else {
+    MATH.streak = 0;
+    document.getElementById('mathStreak').textContent = 0;
+    fb.textContent = '❌ Javob: ' + MATH.ans;
+    fb.className = 'math-fb show no';
+  }
+  setTimeout(() => { fb.className = 'math-fb'; nextMath(); }, 500);
+}
+
+function endMath() {
+  recordScore('math', MATH.score);
+  showResult('#d97706', 'rgba(217,119,6,.12)', MATH.score, 'Tez Matematika');
+}
+
+// ═══════════════════════════════════════════
+// SEQUENCE GAME
+// ═══════════════════════════════════════════
+let SEQST = { score: 0, level: 1, correct: 0, idx: 0, pool: [] };
+
+function initSequence() {
+  SEQST = { score: 0, level: 1, correct: 0, idx: 0, pool: shuffle([...SEQ_DB]) };
+  ['seqScore', 'seqLevel', 'seqCorrect'].forEach(id => document.getElementById(id).textContent = id === 'seqLevel' ? '1' : '0');
+  nextSeq();
+}
+
+function nextSeq() {
+  if (SEQST.idx >= SEQST.pool.length) { endSeq(); return; }
+  const q = SEQST.pool[SEQST.idx];
+  document.getElementById('seqNumbers').innerHTML = [...q.seq, '?'].map((n, i) => `<div class="seq-num ${n === '?' ? 'hidden' : ''}">${n}</div>`).join('');
+  document.getElementById('seqHint').textContent = q.hint;
+  document.getElementById('seqOpts').innerHTML = shuffle([...q.opts]).map(o => `<button class="seq-opt" onclick="answerSeq(${o},${q.ans})">${o}</button>`).join('');
+}
+
+function answerSeq(chosen, ans) {
+  document.querySelectorAll('.seq-opt').forEach(b => {
+    b.disabled = true;
+    const val = parseFloat(b.textContent);
+    if (val === ans) b.classList.add('correct');
+    else if (val === chosen && chosen !== ans) b.classList.add('wrong');
+  });
+  if (chosen === ans) {
+    SEQST.score += 100 + SEQST.level * 20;
+    SEQST.correct++;
+    if (SEQST.correct % 3 === 0) SEQST.level = Math.min(5, SEQST.level + 1);
+  }
+  document.getElementById('seqScore').textContent = SEQST.score;
+  document.getElementById('seqLevel').textContent = SEQST.level;
+  document.getElementById('seqCorrect').textContent = SEQST.correct;
+  SEQST.idx++;
+  setTimeout(nextSeq, 1200);
+}
+
+function endSeq() {
+  recordScore('sequence', SEQST.score);
+  showResult('#2563eb', 'rgba(37,99,235,.12)', SEQST.score, 'Son ketma-ketligi');
+}
+
+// ═══════════════════════════════════════════
+// ANALOGY GAME
+// ═══════════════════════════════════════════
+let ANS = { score: 0, qi: 0, correct: 0, pool: [] };
+
+function initAnalogy() {
+  ANS = { score: 0, qi: 0, correct: 0, pool: shuffle([...ANALOGY_DB]) };
+  ['analogyScore', 'analogyCorrect'].forEach(id => document.getElementById(id).textContent = '0');
+  document.getElementById('analogyQ').textContent = '1';
+  nextAnalogy();
+}
+
+function nextAnalogy() {
+  if (ANS.qi >= ANS.pool.length) { endAnalogy(); return; }
+  const q = ANS.pool[ANS.qi];
+  document.getElementById('analogyQ2').textContent = q.q;
+  document.getElementById('analogyQ').textContent = ANS.qi + 1;
+  document.getElementById('analogyFb').className = 'quiz-fb';
+  document.getElementById('analogyNext').style.display = 'none';
+  document.getElementById('analogyOpts').innerHTML = q.opts.map((o, i) => `<button class="analogy-opt" onclick="answerAnalogy(${i})">${o}</button>`).join('');
+}
+
+function answerAnalogy(i) {
+  const q = ANS.pool[ANS.qi];
+  document.querySelectorAll('.analogy-opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('analogyFb');
+  if (i === q.ans) {
+    ANS.score += 150; ANS.correct++;
+    document.querySelectorAll('.analogy-opt')[i].classList.add('correct');
+    fb.className = 'quiz-fb show ok'; fb.textContent = '✅ To\'g\'ri! ' + q.exp;
+  } else {
+    document.querySelectorAll('.analogy-opt')[i].classList.add('wrong');
+    document.querySelectorAll('.analogy-opt')[q.ans].classList.add('correct');
+    fb.className = 'quiz-fb show no'; fb.textContent = '❌ Noto\'g\'ri. ' + q.exp;
+  }
+  document.getElementById('analogyScore').textContent = ANS.score;
+  document.getElementById('analogyCorrect').textContent = ANS.correct;
+  ANS.qi++;
+  document.getElementById('analogyNext').style.display = 'block';
+}
+
+function endAnalogy() {
+  recordScore('analogy', ANS.score);
+  showResult('#d97706', 'rgba(217,119,6,.12)', ANS.score, "So'z Analogiyasi");
+}
+
+// ═══════════════════════════════════════════
+// LOGIC GAME
+// ═══════════════════════════════════════════
+let LS = { score: 0, qi: 0, correct: 0, pool: [] };
+
+function initLogic() {
+  LS = { score: 0, qi: 0, correct: 0, pool: shuffle([...LOGIC_DB]) };
+  ['logicScore', 'logicCorrect'].forEach(id => document.getElementById(id).textContent = '0');
+  document.getElementById('logicQ').textContent = '1';
+  nextLogic();
+}
+
+function nextLogic() {
+  if (LS.qi >= LS.pool.length) { endLogic(); return; }
+  const q = LS.pool[LS.qi];
+  const badge = document.getElementById('logicTypeBadge');
+  badge.textContent = q.type;
+  badge.style.background = q.color;
+  badge.style.color = q.textColor;
+  badge.style.padding = '4px 11px';
+  badge.style.borderRadius = '7px';
+  badge.style.fontSize = '10.5px';
+  badge.style.fontWeight = '700';
+  document.getElementById('logicQText').textContent = q.q;
+  document.getElementById('logicQ').textContent = LS.qi + 1;
+  document.getElementById('logicFb').className = 'quiz-fb';
+  document.getElementById('logicNext').style.display = 'none';
+  document.getElementById('logicOpts').innerHTML = q.opts.map((o, i) => `<button class="logic-opt" onclick="answerLogic(${i})"><span class="logic-opt-num">${['A','B','C','D'][i]}</span>${o}</button>`).join('');
+}
+
+function answerLogic(i) {
+  const q = LS.pool[LS.qi];
+  document.querySelectorAll('.logic-opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('logicFb');
+  if (i === q.ans) {
+    LS.score += 200; LS.correct++;
+    document.querySelectorAll('.logic-opt')[i].classList.add('correct');
+    fb.className = 'quiz-fb show ok'; fb.textContent = '✅ To\'g\'ri! ' + q.exp;
+  } else {
+    document.querySelectorAll('.logic-opt')[i].classList.add('wrong');
+    document.querySelectorAll('.logic-opt')[q.ans].classList.add('correct');
+    fb.className = 'quiz-fb show no'; fb.textContent = '❌ Noto\'g\'ri. ' + q.exp;
+  }
+  document.getElementById('logicScore').textContent = LS.score;
+  document.getElementById('logicCorrect').textContent = LS.correct;
+  LS.qi++;
+  document.getElementById('logicNext').style.display = 'block';
+}
+
+function endLogic() {
+  recordScore('logic', LS.score);
+  showResult('#7c3aed', 'rgba(124,58,237,.12)', LS.score, "Mantiq & IQ");
+}
+
+// ═══════════════════════════════════════════
+// FLASHCARD GAME
+// ═══════════════════════════════════════════
+let FS = { cards: [], idx: 0, known: 0, flipped: false };
+
+function initFlash() {
+  FS = { cards: shuffle([...FLASH_DB]), idx: 0, known: 0, flipped: false };
+  updateFlash();
+}
+
+function updateFlash() {
+  if (FS.idx >= FS.cards.length) {
+    recordScore('flashcard', FS.known * 100);
+    showResult('#059669', 'rgba(5,150,105,.12)', FS.known * 100, 'Flashcard');
+    return;
+  }
+  const c = FS.cards[FS.idx];
+  FS.flipped = false;
+  document.getElementById('flashCard').classList.remove('flipped');
+  document.getElementById('flashSide').textContent = 'SAVOL';
+  document.getElementById('flashWord').textContent = c.q;
+  document.getElementById('flashHint').textContent = c.cat + ' — Bosing va javobni ko\'ring';
+  document.getElementById('flashCounter').textContent = `${FS.idx + 1} / ${FS.cards.length}`;
+  document.getElementById('flashKnownCount').textContent = FS.known + ' ta bilindim';
+  document.getElementById('flashTotalCount').textContent = FS.cards.length + ' ta';
+  document.getElementById('flashProgFill').style.width = ((FS.idx / FS.cards.length) * 100) + '%';
+}
+
+function flipFlash() {
+  FS.flipped = !FS.flipped;
+  const c = FS.cards[FS.idx];
+  const card = document.getElementById('flashCard');
+  if (FS.flipped) {
+    card.classList.add('flipped');
+    document.getElementById('flashSide').textContent = 'JAVOB';
+    document.getElementById('flashWord').textContent = c.a;
+    document.getElementById('flashHint').textContent = 'Bilasizmi?';
+  } else {
+    card.classList.remove('flipped');
+    document.getElementById('flashSide').textContent = 'SAVOL';
+    document.getElementById('flashWord').textContent = c.q;
+    document.getElementById('flashHint').textContent = c.cat;
+  }
+}
+
+function flashKnow() { FS.known++; FS.idx++; updateFlash(); }
+function flashReview() { FS.cards.push(FS.cards.splice(FS.idx, 1)[0]); updateFlash(); }
+
+// ═══════════════════════════════════════════
+// SUDOKU GAME
+// ═══════════════════════════════════════════
+let SUDOKUSTATE = { puzzle: [], solution: [], selected: -1, errors: 0, startTime: 0, timerInterval: null };
+
+function initSudoku() {
+  clearInterval(SUDOKUSTATE.timerInterval);
+  const p = [...SUDOKU_PUZZLES[0]];
+  const s = [...SUDOKU_SOLVED[0]];
+  SUDOKUSTATE = { puzzle: p, solution: s, selected: -1, errors: 0, startTime: Date.now(), timerInterval: null };
+  document.getElementById('sudokuErrors').textContent = '0';
+  renderSudoku();
+  const t = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - SUDOKUSTATE.startTime) / 1000);
+    const m = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const sec = (elapsed % 60).toString().padStart(2, '0');
+    document.getElementById('sudokuTimer').textContent = `⏱ ${m}:${sec}`;
+  }, 1000);
+  SUDOKUSTATE.timerInterval = t;
+  allTimers.push(t);
+  document.getElementById('sudokuNumpad').innerHTML = [1,2,3,4,5,6,7,8,9].map(n => `<button class="sudoku-num-btn" onclick="sudokuInput(${n})">${n}</button>`).join('');
+}
+
+function renderSudoku() {
+  const board = document.getElementById('sudokuBoard');
+  board.innerHTML = SUDOKUSTATE.puzzle.map((v, i) => {
+    const r = Math.floor(i / 9), c = i % 9;
+    const borderR = (c === 2 || c === 5) ? ' sudoku-border-r' : '';
+    const borderB = (r === 2 || r === 5) ? ' sudoku-border-b' : '';
+    const given = SUDOKU_PUZZLES[0][i] !== 0;
+    const cls = `sudoku-cell${given ? ' given' : ''}${borderR}${borderB}${i === SUDOKUSTATE.selected ? ' focus' : ''}`;
+    return `<input class="${cls}" id="sc${i}" ${given ? 'disabled' : ''} type="text" maxlength="1" value="${v || ''}" readonly onclick="sudokuSelect(${i})">`;
+  }).join('');
+}
+
+function sudokuSelect(i) { SUDOKUSTATE.selected = i; renderSudoku(); }
+
+function sudokuInput(n) {
+  const i = SUDOKUSTATE.selected;
+  if (i < 0 || SUDOKU_PUZZLES[0][i] !== 0) return;
+  if (n === SUDOKUSTATE.solution[i]) {
+    SUDOKUSTATE.puzzle[i] = n;
+    document.getElementById('sc' + i).classList.add('correct');
+    renderSudoku();
+    if (SUDOKUSTATE.puzzle.every((v, j) => v === SUDOKUSTATE.solution[j])) {
+      clearInterval(SUDOKUSTATE.timerInterval);
+      const t = Math.floor((Date.now() - SUDOKUSTATE.startTime) / 1000);
+      const score = Math.max(100, 3000 - t * 5 - SUDOKUSTATE.errors * 100);
+      recordScore('sudoku', score);
+      showResult('#0891b2', 'rgba(8,145,178,.12)', score, 'Sudoku');
+    }
+  } else {
+    SUDOKUSTATE.errors++;
+    document.getElementById('sudokuErrors').textContent = SUDOKUSTATE.errors;
+    const cell = document.getElementById('sc' + i);
+    cell.classList.add('error');
+    setTimeout(() => cell.classList.remove('error'), 800);
+    if (SUDOKUSTATE.errors >= 3) {
+      clearInterval(SUDOKUSTATE.timerInterval);
+      showToast('err', '3 ta xato! O\'yin tugadi');
+    }
+  }
+}
+
+function sudokuHint() {
+  const empty = SUDOKUSTATE.puzzle.map((v, i) => v === 0 ? i : -1).filter(i => i >= 0);
+  if (!empty.length) return;
+  const i = empty[Math.floor(Math.random() * empty.length)];
+  SUDOKUSTATE.puzzle[i] = SUDOKUSTATE.solution[i];
+  SUDOKUSTATE.selected = i;
+  renderSudoku();
+}
+
+function sudokuClear() {
+  if (SUDOKUSTATE.selected < 0 || SUDOKU_PUZZLES[0][SUDOKUSTATE.selected] !== 0) return;
+  SUDOKUSTATE.puzzle[SUDOKUSTATE.selected] = 0;
+  renderSudoku();
+}
+
+// ═══════════════════════════════════════════
+// LEADERBOARD
+// ═══════════════════════════════════════════
+function switchBoard(type, btn) {
+  document.querySelectorAll('.board-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBoard(type);
+}
+
+function renderBoard(type) {
+  const sc = getScores();
+  const rows = [];
+  Object.entries(sc).forEach(([k, d]) => {
+    if (k === '_seeded') return;
+    const arr = d[type] || [];
+    const best = arr.length ? Math.max(...arr.map(s => s.score)) : 0;
+    if (best > 0) rows.push({ name: d.name || k, score: best, games: d.games || 0, isMe: CU && k === CU.email });
+  });
+  rows.sort((a, b) => b.score - a.score);
+  const medals = ['🥇', '🥈', '🥉'];
+  const hdr = `<div class="board-row hdr"><div>O'rin</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">O'yinlar</div></div>`;
+  const trs = rows.slice(0, 15).map((r, i) => {
+    const bg = i < 3 ? ['top1', 'top2', 'top3'][i] : '';
+    const rank = i < 3 ? `<div class="b-rank ${['g','s','b'][i]}">${medals[i]}</div>` : `<div class="b-rank">${i + 1}</div>`;
+    const av = `<div class="b-av" style="background:linear-gradient(135deg,hsl(${(r.name.charCodeAt(0)*53)%360},55%,50%),hsl(${(r.name.charCodeAt(0)*79)%360},60%,55%))">${r.name[0].toUpperCase()}</div>`;
+    return `<div class="board-row ${bg}${r.isMe ? ' my-row' : ''}">${rank}<div class="b-player">${av}<div class="b-name">${r.name}${r.isMe ? ' (siz)' : ''}</div></div><div class="b-score">${r.score}</div><div class="b-games">${r.games}</div></div>`;
+  }).join('');
+  document.getElementById('boardTable').innerHTML = hdr + trs;
+}
+
+// ═══════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════
+function renderProfile() {
+  if (!CU) { showPage('home'); openModal('login'); return; }
+  document.getElementById('profAv').textContent = CU.name[0].toUpperCase();
+  document.getElementById('profName').textContent = CU.name;
+  document.getElementById('profEmail').textContent = CU.email;
+  document.getElementById('profCoins').textContent = CU.coins || 0;
+  document.getElementById('profGames').textContent = CU.games || 0;
+  document.getElementById('profWins').textContent = CU.wins || 0;
+  document.getElementById('profBest').textContent = CU.bestScore || 0;
+  document.getElementById('profStreak').textContent = CU.streak || 0;
+  const hist = CU.history || [];
+  document.getElementById('histList').innerHTML = hist.length
+    ? hist.map(h => `<div class="hist-item"><div class="hist-icon" style="background:rgba(37,99,235,.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" width="18" height="18"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.8-5.5-3-5.5 3 1-6.8L3 8.9 9 8l3-6z"/></svg></div><div class="hist-info"><div class="hist-title">${h.game}</div><div class="hist-time">${h.date}</div></div><div class="hist-score">${h.score}</div></div>`).join('')
+    : `<div style="text-align:center;color:var(--muted);padding:28px;font-size:13.5px;font-weight:600">Hali o'yin o'ynamagansiz</div>`;
+}
+
+function animateCounter(el, target, duration) {
+  if (!el) return;
+  const startTime = performance.now();
+  function step(now) {
+    const p = Math.min((now - startTime) / duration, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(target * e).toLocaleString('uz-UZ');
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString('uz-UZ');
+  }
+  requestAnimationFrame(step);
+}
+
+// ─── KARVO Area Chart helpers ───────────────
+const karvoCharts = {};
+
+function buildKarvoAreaChart(canvasId, labels, data, colorRGB) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  if (karvoCharts[canvasId]) { karvoCharts[canvasId].destroy(); }
+  karvoCharts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: `rgba(${colorRGB},0.85)`,
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: (ctx2) => {
+          const {ctx: c, chartArea} = ctx2.chart;
+          if (!chartArea) return `rgba(${colorRGB},0.15)`;
+          const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          g.addColorStop(0, `rgba(${colorRGB},0.38)`);
+          g.addColorStop(1, `rgba(${colorRGB},0.01)`);
+          return g;
+        },
+        tension: 0.45,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: `rgba(${colorRGB},1)`,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 1000, easing: 'easeInOutQuart' },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(8,18,42,0.96)',
+          borderColor: `rgba(${colorRGB},0.4)`, borderWidth: 1,
+          titleColor: '#94a3b8', bodyColor: '#e2e8f0', padding: 10,
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: { color: 'rgba(148,163,184,0.5)', font:{size:10}, maxTicksLimit:8, maxRotation:0 },
+          border: { display: false }
+        },
+        y: { display: false, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function makeAreaLabels(period) {
+  const n = period==='24soat'?24 : period==='7kun'?7 : period==='30kun'?30 : 12;
+  const now = new Date();
+  return Array.from({length:n}, (_,i) => {
+    const d = new Date(now);
+    if (period==='24soat') { d.setHours(d.getHours()-(n-1-i)); return d.getHours()+':00'; }
+    if (period==='7kun')  { d.setDate(d.getDate()-(n-1-i)); return (d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1)); }
+    if (period==='30kun') { d.setDate(d.getDate()-(n-1-i)); return (d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1)); }
+    d.setMonth(d.getMonth()-(n-1-i));
+    return d.toLocaleDateString('uz-UZ',{month:'short'});
+  });
+}
+
+function makeAreaData(peak, n, seed) {
+  // Build realistic-looking trend that grows and peaks near the end
+  const data = [];
+  for (let i=0; i<n; i++) {
+    const t = i/(n-1);
+    const trend = Math.pow(t, 0.7);
+    const noise = (Math.sin(i*seed+1.3)*0.18 + Math.sin(i*seed*2.1)*0.1);
+    data.push(Math.max(1, Math.round(peak * (trend * 0.85 + 0.05 + noise))));
+  }
+  data[n-1] = peak;
+  return data;
+}
+
+function refreshKarvoCharts(period, dUsers, dGames, dScore) {
+  const n = period==='24soat'?24 : period==='7kun'?7 : period==='30kun'?30 : 12;
+  const labels = makeAreaLabels(period);
+  buildKarvoAreaChart('karvoChartUsers', labels, makeAreaData(dUsers, n, 1.7), '56,189,248');
+  buildKarvoAreaChart('karvoChartGames', labels, makeAreaData(dGames, n, 2.3), '56,189,248');
+  buildKarvoAreaChart('karvoChartScore', labels, makeAreaData(dScore, n, 0.9), '56,189,248');
+}
+
+function renderAdmin() {
+  if (!CU || !CU.isAdmin) { showPage('home'); openModal('login'); return; }
+  const users = getUsers();
+  const stats = getSiteStats();
+  document.getElementById('adminName').textContent = CU.name || 'Admin';
+  document.getElementById('adminDate').textContent = stats.today || new Date().toLocaleDateString('uz-UZ');
+
+  const scores = getScores();
+  const totalGames = Object.values(scores).reduce((s,u)=>s+(u.games||0),0);
+  const totalScore = Object.values(scores).reduce((s,u)=>
+    s+Object.values(u).reduce((si,v)=>Array.isArray(v)?si+v.reduce((a,i)=>a+(i.score||0),0):si,0),0);
+  const activeToday = stats.todayActiveUsers||stats.todaySessions||stats.todayViews||0;
+  const todayRegs   = stats.todayRegistrations||0;
+
+  // Use real data or demo fallback
+  const dUsers = users.length   || 32875;
+  const dGames = totalGames     || 148920;
+  const dScore = totalScore     || 8456210;
+  const dActive= activeToday    || 1284;
+  const dRegs  = todayRegs      || 47;
+
+  const topSc = Math.max(...users.map(u=>{
+    const sc=scores[u.email]||{};
+    return Object.values(sc).reduce((s,v)=>Array.isArray(v)?s+v.reduce((a,i)=>a+(i.score||0),0):s,0);
+  }),0)||9840;
+  const avgG = users.length>0 ? Math.round(dGames/users.length) : 5;
+
+  setTimeout(()=>{
+    animateCounter(document.getElementById('totalUsers'),  dUsers, 1000);
+    animateCounter(document.getElementById('totalGames'),  dGames, 1100);
+    animateCounter(document.getElementById('totalScore'),  dScore, 1200);
+    animateCounter(document.getElementById('activeToday'), dActive, 900);
+    animateCounter(document.getElementById('todayRegs'),   dRegs,  800);
+    animateCounter(document.getElementById('karvoTopScore'),topSc,1100);
+    animateCounter(document.getElementById('karvoAvgGames'),avgG,  900);
+    const su=document.getElementById('karvoSubUsers');  if(su) su.textContent=dUsers.toLocaleString('uz-UZ');
+    const sg=document.getElementById('karvoSubGames');  if(sg) sg.textContent=dGames.toLocaleString('uz-UZ');
+    const ss=document.getElementById('karvoSubScore');  if(ss) ss.textContent=dScore.toLocaleString('uz-UZ');
+  },120);
+
+  setPeriod(null,'12oy');
+  document.getElementById('recentActivity').innerHTML='';
+}
+
+let adminStatsChart = null;
+let adminDonutChart = null;
+
+function renderAdminDonut(){/* replaced */}
+function renderAdminActivityChart(){/* replaced */}
+
+function buildAdminHistoryEntries(stats,period){
+  const today=new Date().toLocaleDateString('uz-UZ');
+  let history=(stats.history||[]).slice(-30);
+  if(!history.length){
+    history=Array.from({length:30},(_,i)=>{
+      const d=new Date(); d.setDate(d.getDate()-(29-i));
+      const base=20+i*2;
+      return{date:d.toLocaleDateString('uz-UZ'),views:Math.floor(base*3+Math.random()*base),sessions:Math.floor(base*1.8+Math.random()*base*.6),newUsers:Math.floor(base*.4+Math.random()*10)};
+    });
+  }
+  if(!history.some(e=>e.date===today)) history.push({date:today,views:stats.todayViews||0,sessions:stats.todaySessions||0,newUsers:stats.todayNew||0});
+  if(period==='24soat') return history.slice(-1);
+  if(period==='7kun')   return history.slice(-7);
+  if(period==='30kun')  return history.slice(-30);
+  return history;
+}
+
+function setPeriod(btn, period) {
+  // update pill buttons
+  document.querySelectorAll('.karvo-pbtn, .filter-btn').forEach(el => el.classList.remove('active'));
+  const sel = btn || document.querySelector(`.karvo-pbtn[data-period="${period}"], .filter-btn[data-period="${period}"]`);
+  if (sel) sel.classList.add('active');
+
+  // Pull real or demo values
+  const users = getUsers();
+  const scores = getScores();
+  const totalGames = Object.values(scores).reduce((s,u)=>s+(u.games||0),0);
+  const totalScore = Object.values(scores).reduce((s,u)=>s+Object.values(u).reduce((si,v)=>Array.isArray(v)?si+v.reduce((a,i)=>a+(i.score||0),0):si,0),0);
+  const dUsers = users.length  || 32875;
+  const dGames = totalGames    || 148920;
+  const dScore = totalScore    || 8456210;
+
+  const n = period==='24soat'?24 : period==='7kun'?7 : period==='30kun'?30 : 12;
+  const labels = makeAreaLabels(period);
+  buildKarvoAreaChart('karvoChartUsers', labels, makeAreaData(dUsers, n, 1.7), '56,189,248');
+  buildKarvoAreaChart('karvoChartGames', labels, makeAreaData(dGames, n, 2.3), '56,189,248');
+  buildKarvoAreaChart('karvoChartScore', labels, makeAreaData(dScore, n, 0.9), '56,189,248');
+}
+
+// ═══════════════════════════════════════════
+// SIDEBAR TOGGLE
+// ═══════════════════════════════════════════
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const isOpen = sb.classList.contains('open');
+  sb.classList.toggle('open', !isOpen);
+  ov.classList.toggle('open', !isOpen);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+registerSiteVisit();
+tryAutoLogin();
+
+// Default: show game selection
+const arenaEl = document.getElementById('arena');
+const gameSelectGridEl = document.getElementById('gameSelectGrid');
+if (arenaEl) arenaEl.style.display = 'none';
+if (gameSelectGridEl) gameSelectGridEl.classList.remove('hide');
+</script>
+
+</body>
+</html>
