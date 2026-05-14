@@ -7,6 +7,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWIM0wDQC_fxCybadsHbLI4yFTKfhTKFg",
+    authDomain: "braingame-dafdb.firebaseapp.com",
+    projectId: "braingame-dafdb",
+    storageBucket: "braingame-dafdb.firebasestorage.app",
+    messagingSenderId: "480426581716",
+    appId: "1:480426581716:web:fdfb0fa32e18faf7642541",
+    measurementId: "G-32RH0X97JP"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const fbAuth = firebase.auth();
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+</script>
 <style>
 :root {
   --brand: #2563eb;
@@ -1827,6 +1844,34 @@ img{max-width:100%;height:auto}
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.05);
 }
+
+/* Google Auth Button */
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 11px; border-radius: 10px;
+  border: 1.5px solid #e2e8f0; background: #fff;
+  color: #1a1a1a; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.18s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-bottom: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.btn-google:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+.btn-google img { width: 20px; height: 20px; }
+.auth-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0; color: #94a3b8; font-size: 12px; font-weight: 600;
+}
+.auth-divider::before,.auth-divider::after {
+  content:''; flex:1; height:1px; background:#e2e8f0;
+}
+.google-loading {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid #e2e8f0; border-top-color: #4285F4;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -2949,6 +2994,11 @@ img{max-width:100%;height:auto}
       <div class="modal-title">Xush kelibsiz!</div>
       <div class="modal-sub">Akkauntingizga kiring</div>
     </div>
+    <button class="btn-google" id="loginGoogleBtn" onclick="doGoogleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      Google bilan kirish
+    </button>
+    <div class="auth-divider">yoki</div>
     <div class="form-err" id="loginErr"></div>
     <div class="form-grp"><label class="form-lbl">Telefon yoki Email</label><input class="form-inp" id="loginEmail" type="text" placeholder="+998xxxxxxxxx yoki email"></div>
     <div class="form-grp"><label class="form-lbl">Parol</label><input class="form-inp" id="loginPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -2967,6 +3017,11 @@ img{max-width:100%;height:auto}
       <div class="modal-title">Qo'shiling!</div>
       <div class="modal-sub">Bepul akkaunt yarating</div>
     </div>
+    <button class="btn-google" id="regGoogleBtn" onclick="doGoogleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      Google bilan ro'yxatdan o'tish
+    </button>
+    <div class="auth-divider">yoki</div>
     <div class="form-err" id="regErr"></div>
     <div class="form-grp"><label class="form-lbl">Ism</label><input class="form-inp" id="regName" type="text" placeholder="Ismingiz"></div>
     <div class="form-grp"><label class="form-lbl">Email</label><input class="form-inp" id="regEmail" type="email" placeholder="email@example.com"></div>
@@ -5037,6 +5092,95 @@ function toggleSidebar() {
   sb.classList.toggle('open', !isOpen);
   ov.classList.toggle('open', !isOpen);
 }
+
+
+// ═══════════════════════════════════════════
+// GOOGLE / FIREBASE AUTH
+// ═══════════════════════════════════════════
+function doGoogleLogin() {
+  const btns = document.querySelectorAll('#loginGoogleBtn, #regGoogleBtn');
+  btns.forEach(b => { b.disabled = true; b.innerHTML = '<span class="google-loading"></span> Yuklanmoqda...'; });
+
+  fbAuth.signInWithPopup(googleProvider)
+    .then(result => {
+      const fbUser = result.user;
+      const email  = fbUser.email;
+      const name   = fbUser.displayName || email.split('@')[0];
+
+      // Merge with local storage users
+      const users = getUsers();
+      let user = users.find(u => u.email === email);
+      if (!user) {
+        // New user via Google
+        user = {
+          name,
+          email,
+          password: '',          // no password for Google users
+          googleUid: fbUser.uid,
+          photoURL: fbUser.photoURL || '',
+          coins: 0, games: 0, wins: 0, bestScore: 0, streak: 0,
+          history: [],
+          registeredAt: new Date().toLocaleString('uz-UZ'),
+          visitCount: 1,
+          lastLogin: new Date().toLocaleString('uz-UZ'),
+          isAdmin: false,
+        };
+        users.push(user);
+        saveUsers(users);
+        // update stats
+        const stats = getSiteStats();
+        rollStatsToToday(stats);
+        stats.todayNew = (stats.todayNew || 0) + 1;
+        stats.todayRegistrations = (stats.todayRegistrations || 0) + 1;
+        saveSiteStats(stats);
+      } else {
+        user.lastLogin = new Date().toLocaleString('uz-UZ');
+        user.visitCount = (user.visitCount || 0) + 1;
+        user.googleUid = fbUser.uid;
+        if (fbUser.photoURL) user.photoURL = fbUser.photoURL;
+        const idx = users.findIndex(u => u.email === email);
+        if (idx > -1) { users[idx] = user; saveUsers(users); }
+      }
+
+      CU = user;
+      saveSession(email);
+      recordRegisteredActivity(email);
+      closeModal();
+      updateUI();
+      showToast('ok', 'Xush kelibsiz, ' + name + '! 🎉');
+      if (document.getElementById('page-profile').classList.contains('active')) renderProfile();
+      if (document.getElementById('page-leaderboard').classList.contains('active')) renderBoard('quiz');
+    })
+    .catch(err => {
+      let msg = 'Google kirish xatoligi';
+      if (err.code === 'auth/popup-closed-by-user') msg = 'Oyna yopildi, qaytadan urining';
+      else if (err.code === 'auth/popup-blocked') msg = 'Popup bloklangan — brauzer ruxsat bering';
+      else if (err.code === 'auth/cancelled-popup-request') return; // silent
+      showToast('err', msg);
+    })
+    .finally(() => {
+      btns.forEach(b => {
+        b.disabled = false;
+        b.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px;height:20px"> Google bilan kirish';
+      });
+    });
+}
+
+// Firebase auth state listener — keeps local session in sync
+fbAuth.onAuthStateChanged(fbUser => {
+  if (fbUser) {
+    const email = fbUser.email;
+    if (!getSession()) {
+      // Restore session from Firebase (page reload case)
+      const user = getUsers().find(u => u.email === email);
+      if (user && !CU) {
+        CU = user;
+        saveSession(email);
+        updateUI();
+      }
+    }
+  }
+});
 
 // ═══════════════════════════════════════════
 // INIT
