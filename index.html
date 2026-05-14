@@ -10,6 +10,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyBWIM0wDQC_fxCybadsHbLI4yFTKfhTKFg",
@@ -23,6 +24,7 @@
   firebase.initializeApp(firebaseConfig);
   const fbAuth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
+  const db = firebase.firestore();
 </script>
 <style>
 :root {
@@ -3058,25 +3060,104 @@ const UK = 'bg_users_v2', SK = 'bg_session_v2', SCK = 'bg_scores_v2', VK = 'bg_s
 let CU = null, CG = null, selectedSubj = 'all';
 let allTimers = [];
 
-const getUsers = () => JSON.parse(localStorage.getItem(UK) || '[]');
-const saveUsers = (u) => localStorage.setItem(UK, JSON.stringify(u));
-const getScores = () => JSON.parse(localStorage.getItem(SCK) || '{}');
-const saveScores = (s) => localStorage.setItem(SCK, JSON.stringify(s));
+// ─── Firestore helpers ───────────────────────
+// Users collection: db.collection('users').doc(email)
+// Scores collection: db.collection('scores').doc(email)
+// SiteStats: db.collection('meta').doc('siteStats')
+
+// Cache for sync access
+let _usersCache = null;
+let _scoresCache = null;
+let _statsCache = null;
+
+// Firestore → save/load user profile
+async function fsGetUser(email) {
+  try {
+    const doc = await db.collection('users').doc(email).get();
+    return doc.exists ? doc.data() : null;
+  } catch(e) { return null; }
+}
+async function fsSaveUser(user) {
+  if (!user || !user.email) return;
+  try {
+    await db.collection('users').doc(user.email).set(user, { merge: true });
+    // update cache
+    if (_usersCache) {
+      const i = _usersCache.findIndex(u => u.email === user.email);
+      if (i > -1) _usersCache[i] = user; else _usersCache.push(user);
+    }
+  } catch(e) { console.error('fsSaveUser:', e); }
+}
+async function fsGetAllUsers() {
+  try {
+    const snap = await db.collection('users').get();
+    _usersCache = snap.docs.map(d => d.data());
+    return _usersCache;
+  } catch(e) { return _usersCache || []; }
+}
+
+// Firestore → scores
+async function fsGetScores() {
+  try {
+    const snap = await db.collection('scores').get();
+    const result = {};
+    snap.docs.forEach(d => { result[d.id] = d.data(); });
+    _scoresCache = result;
+    return result;
+  } catch(e) { return _scoresCache || {}; }
+}
+async function fsSaveScoreEntry(email, gameType, scoreEntry, userData) {
+  if (!email) return;
+  try {
+    const ref = db.collection('scores').doc(email);
+    const doc = await ref.get();
+    const existing = doc.exists ? doc.data() : { name: userData?.name || email };
+    if (!existing[gameType]) existing[gameType] = [];
+    existing[gameType].push(scoreEntry);
+    existing.games = (existing.games || 0) + 1;
+    existing.name = userData?.name || existing.name;
+    await ref.set(existing, { merge: true });
+    if (_scoresCache) _scoresCache[email] = existing;
+  } catch(e) { console.error('fsSaveScoreEntry:', e); }
+}
+
+// Firestore → site stats
+async function fsGetSiteStats() {
+  try {
+    const doc = await db.collection('meta').doc('siteStats').get();
+    _statsCache = doc.exists ? doc.data() : {
+      views: 0, sessions: 0, todayNew: 0, todayViews: 0, todaySessions: 0,
+      todayRegistrations: 0, todayActiveUsers: 0,
+      today: new Date().toLocaleDateString('uz-UZ'), history: []
+    };
+    return _statsCache;
+  } catch(e) { return _statsCache || {
+    views: 0, sessions: 0, todayNew: 0, todayViews: 0, todaySessions: 0,
+    todayRegistrations: 0, todayActiveUsers: 0,
+    today: new Date().toLocaleDateString('uz-UZ'), history: []
+  }; }
+}
+async function fsSaveSiteStats(s) {
+  try {
+    _statsCache = s;
+    await db.collection('meta').doc('siteStats').set(s);
+  } catch(e) { console.error('fsSaveSiteStats:', e); }
+}
+
+// ─── Backward-compat sync wrappers (use cache) ───
+const getUsers = () => _usersCache || JSON.parse(localStorage.getItem(UK) || '[]');
+const saveUsers = (u) => { _usersCache = u; localStorage.setItem(UK, JSON.stringify(u)); };
+const getScores = () => _scoresCache || JSON.parse(localStorage.getItem(SCK) || '{}');
+const saveScores = (s) => { _scoresCache = s; localStorage.setItem(SCK, JSON.stringify(s)); };
 const getSession = () => localStorage.getItem(SK);
 const saveSession = (e) => localStorage.setItem(SK, e);
 const clearSession = () => localStorage.removeItem(SK);
-const getSiteStats = () => JSON.parse(localStorage.getItem(VK) || JSON.stringify({
-  views: 0,
-  sessions: 0,
-  todayNew: 0,
-  todayViews: 0,
-  todaySessions: 0,
-  todayRegistrations: 0,
-  todayActiveUsers: 0,
-  today: new Date().toLocaleDateString('uz-UZ'),
-  history: []
+const getSiteStats = () => _statsCache || JSON.parse(localStorage.getItem(VK) || JSON.stringify({
+  views: 0, sessions: 0, todayNew: 0, todayViews: 0, todaySessions: 0,
+  todayRegistrations: 0, todayActiveUsers: 0,
+  today: new Date().toLocaleDateString('uz-UZ'), history: []
 }));
-const saveSiteStats = (s) => localStorage.setItem(VK, JSON.stringify(s));
+const saveSiteStats = (s) => { _statsCache = s; localStorage.setItem(VK, JSON.stringify(s)); fsSaveSiteStats(s); };
 
 function pushStatsHistory(stats, currentDate) {
   if (!stats.today || stats.today === currentDate) return;
@@ -3522,9 +3603,12 @@ function updateTopbar() {
 
 function saveCU() {
   if (!CU) return;
+  // Local cache
   const users = getUsers();
   const i = users.findIndex(u => u.email === CU.email);
   if (i > -1) { users[i] = CU; saveUsers(users); }
+  // Firestore async
+  fsSaveUser(CU);
 }
 
 // ═══════════════════════════════════════════
@@ -3597,11 +3681,13 @@ function showResult(color, bgColor, score, gameName) {
 
 function recordScore(gameType, score) {
   if (!CU) return;
+  // Update local cache immediately for fast UI
   const sc = getScores();
   const key = CU.email;
   if (!sc[key]) sc[key] = { name: CU.name };
   if (!sc[key][gameType]) sc[key][gameType] = [];
-  sc[key][gameType].push({ score, date: Date.now() });
+  const entry = { score, date: Date.now() };
+  sc[key][gameType].push(entry);
   sc[key].games = (sc[key].games || 0) + 1;
   saveScores(sc);
   CU.coins = (CU.coins || 0) + score;
@@ -3612,6 +3698,9 @@ function recordScore(gameType, score) {
   CU.history.unshift({ game: GAME_NAMES[gameType] || gameType, score, date: new Date().toLocaleDateString('uz-UZ') });
   if (CU.history.length > 12) CU.history.pop();
   saveCU();
+  // Save to Firestore async
+  fsSaveScoreEntry(CU.email, gameType, entry, CU);
+  fsSaveUser(CU);
 }
 
 // ═══════════════════════════════════════════
@@ -4426,24 +4515,31 @@ function switchBoard(type, btn) {
 }
 
 function renderBoard(type) {
-  const sc = getScores();
-  const rows = [];
-  Object.entries(sc).forEach(([k, d]) => {
-    if (k === '_seeded') return;
-    const arr = d[type] || [];
-    const best = arr.length ? Math.max(...arr.map(s => s.score)) : 0;
-    if (best > 0) rows.push({ name: d.name || k, score: best, games: d.games || 0, isMe: CU && k === CU.email });
+  const boardTable = document.getElementById('boardTable');
+  boardTable.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">⏳ Yuklanmoqda...</div>';
+  fsGetScores().then(sc => {
+    const rows = [];
+    Object.entries(sc).forEach(([k, d]) => {
+      if (k === '_seeded') return;
+      const arr = d[type] || [];
+      const best = arr.length ? Math.max(...arr.map(s => s.score)) : 0;
+      if (best > 0) rows.push({ name: d.name || k, score: best, games: d.games || 0, isMe: CU && k === CU.email });
+    });
+    rows.sort((a, b) => b.score - a.score);
+    const medals = ['🥇', '🥈', '🥉'];
+    const hdr = `<div class="board-row hdr"><div>O'rin</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">O'yinlar</div></div>`;
+    if (!rows.length) {
+      boardTable.innerHTML = hdr + '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13.5px;font-weight:600">Hali hech kim o\'ynamagan</div>';
+      return;
+    }
+    const trs = rows.slice(0, 15).map((r, i) => {
+      const bg = i < 3 ? ['top1', 'top2', 'top3'][i] : '';
+      const rank = i < 3 ? `<div class="b-rank ${['g','s','b'][i]}">${medals[i]}</div>` : `<div class="b-rank">${i + 1}</div>`;
+      const av = `<div class="b-av" style="background:linear-gradient(135deg,hsl(${(r.name.charCodeAt(0)*53)%360},55%,50%),hsl(${(r.name.charCodeAt(0)*79)%360},60%,55%))">${r.name[0].toUpperCase()}</div>`;
+      return `<div class="board-row ${bg}${r.isMe ? ' my-row' : ''}">${rank}<div class="b-player">${av}<div class="b-name">${r.name}${r.isMe ? ' (siz)' : ''}</div></div><div class="b-score">${r.score}</div><div class="b-games">${r.games}</div></div>`;
+    }).join('');
+    boardTable.innerHTML = hdr + trs;
   });
-  rows.sort((a, b) => b.score - a.score);
-  const medals = ['🥇', '🥈', '🥉'];
-  const hdr = `<div class="board-row hdr"><div>O'rin</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">O'yinlar</div></div>`;
-  const trs = rows.slice(0, 15).map((r, i) => {
-    const bg = i < 3 ? ['top1', 'top2', 'top3'][i] : '';
-    const rank = i < 3 ? `<div class="b-rank ${['g','s','b'][i]}">${medals[i]}</div>` : `<div class="b-rank">${i + 1}</div>`;
-    const av = `<div class="b-av" style="background:linear-gradient(135deg,hsl(${(r.name.charCodeAt(0)*53)%360},55%,50%),hsl(${(r.name.charCodeAt(0)*79)%360},60%,55%))">${r.name[0].toUpperCase()}</div>`;
-    return `<div class="board-row ${bg}${r.isMe ? ' my-row' : ''}">${rank}<div class="b-player">${av}<div class="b-name">${r.name}${r.isMe ? ' (siz)' : ''}</div></div><div class="b-score">${r.score}</div><div class="b-games">${r.games}</div></div>`;
-  }).join('');
-  document.getElementById('boardTable').innerHTML = hdr + trs;
 }
 
 // ═══════════════════════════════════════════
@@ -5102,20 +5198,19 @@ function doGoogleLogin() {
   btns.forEach(b => { b.disabled = true; b.innerHTML = '<span class="google-loading"></span> Yuklanmoqda...'; });
 
   fbAuth.signInWithPopup(googleProvider)
-    .then(result => {
+    .then(async result => {
       const fbUser = result.user;
       const email  = fbUser.email;
       const name   = fbUser.displayName || email.split('@')[0];
 
-      // Merge with local storage users
-      const users = getUsers();
-      let user = users.find(u => u.email === email);
+      // Check Firestore first
+      let user = await fsGetUser(email);
       if (!user) {
-        // New user via Google
+        // New user — create in Firestore
         user = {
           name,
           email,
-          password: '',          // no password for Google users
+          password: '',
           googleUid: fbUser.uid,
           photoURL: fbUser.photoURL || '',
           coins: 0, games: 0, wins: 0, bestScore: 0, streak: 0,
@@ -5125,10 +5220,9 @@ function doGoogleLogin() {
           lastLogin: new Date().toLocaleString('uz-UZ'),
           isAdmin: false,
         };
-        users.push(user);
-        saveUsers(users);
+        await fsSaveUser(user);
         // update stats
-        const stats = getSiteStats();
+        const stats = await fsGetSiteStats();
         rollStatsToToday(stats);
         stats.todayNew = (stats.todayNew || 0) + 1;
         stats.todayRegistrations = (stats.todayRegistrations || 0) + 1;
@@ -5138,9 +5232,14 @@ function doGoogleLogin() {
         user.visitCount = (user.visitCount || 0) + 1;
         user.googleUid = fbUser.uid;
         if (fbUser.photoURL) user.photoURL = fbUser.photoURL;
-        const idx = users.findIndex(u => u.email === email);
-        if (idx > -1) { users[idx] = user; saveUsers(users); }
+        await fsSaveUser(user);
       }
+
+      // Also keep local cache in sync
+      const users = getUsers();
+      const idx = users.findIndex(u => u.email === email);
+      if (idx > -1) users[idx] = user; else users.push(user);
+      saveUsers(users);
 
       CU = user;
       saveSession(email);
@@ -5155,7 +5254,7 @@ function doGoogleLogin() {
       let msg = 'Google kirish xatoligi';
       if (err.code === 'auth/popup-closed-by-user') msg = 'Oyna yopildi, qaytadan urining';
       else if (err.code === 'auth/popup-blocked') msg = 'Popup bloklangan — brauzer ruxsat bering';
-      else if (err.code === 'auth/cancelled-popup-request') return; // silent
+      else if (err.code === 'auth/cancelled-popup-request') return;
       showToast('err', msg);
     })
     .finally(() => {
@@ -5166,14 +5265,23 @@ function doGoogleLogin() {
     });
 }
 
-// Firebase auth state listener — keeps local session in sync
-fbAuth.onAuthStateChanged(fbUser => {
+// Firebase auth state listener — restores session from Firestore on page reload
+fbAuth.onAuthStateChanged(async fbUser => {
   if (fbUser) {
     const email = fbUser.email;
     if (!getSession()) {
-      // Restore session from Firebase (page reload case)
-      const user = getUsers().find(u => u.email === email);
+      // Try Firestore first
+      let user = await fsGetUser(email);
+      if (!user) {
+        // Fallback to local cache
+        user = getUsers().find(u => u.email === email);
+      }
       if (user && !CU) {
+        // Sync to local cache
+        const users = getUsers();
+        const idx = users.findIndex(u => u.email === email);
+        if (idx > -1) users[idx] = user; else users.push(user);
+        saveUsers(users);
         CU = user;
         saveSession(email);
         updateUI();
@@ -5185,8 +5293,21 @@ fbAuth.onAuthStateChanged(fbUser => {
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
-registerSiteVisit();
-tryAutoLogin();
+
+// Preload Firestore data into cache, then init app
+(async function initApp() {
+  try {
+    await Promise.all([
+      fsGetAllUsers(),
+      fsGetScores(),
+      fsGetSiteStats()
+    ]);
+  } catch(e) {
+    console.warn('Firestore preload failed, using localStorage fallback:', e);
+  }
+  registerSiteVisit();
+  tryAutoLogin();
+})();
 
 // Default: show game selection
 const arenaEl = document.getElementById('arena');
