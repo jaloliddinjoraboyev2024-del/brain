@@ -257,7 +257,7 @@ img{max-width:100%;height:auto}
 /* Content */
 .content{padding:28px 24px 60px;max-width:1080px}
 .page{display:none;animation:fadeIn 0.3s ease}
-.page.active{display:block}
+.page.active{display:block !important;min-height:200px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* Hero */
@@ -2817,6 +2817,7 @@ img{max-width:100%;height:auto}
         </div>
 
     </div>
+    </div>
     <div class="page" id="page-leaderboard">
       <div class="sec">
         <div class="sec-hdr">
@@ -3735,7 +3736,7 @@ function showPage(name) {
   const navItem = document.querySelector(`.nav-item[data-page="${name}"]`);
   if (navItem) navItem.classList.add('active');
 
-  const bc = { home: 'Bosh sahifa', games: "O'yinlar", leaderboard: 'Reyting', profile: 'Profil', admin: 'Admin panel' };
+  const bc = { home: 'Bosh sahifa', games: "O'yinlar", leaderboard: 'Reyting', profile: 'Profil', admin: 'Admin panel', support: 'Qo\'llab-quvvatlash' };
   document.getElementById('breadcrumb').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>${bc[name] || name}</span>`;
 
   if (name === 'leaderboard') renderBoard('quiz');
@@ -4628,7 +4629,11 @@ function switchBoard(type, btn) {
 
 function renderBoard(type) {
   const boardTable = document.getElementById('boardTable');
+  if (!boardTable) return;
   boardTable.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">⏳ Yuklanmoqda...</div>';
+
+  const hdr = `<div class="board-row hdr"><div>O'rin</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">O'yinlar</div></div>`;
+
   fsGetScores().then(sc => {
     const rows = [];
     Object.entries(sc).forEach(([k, d]) => {
@@ -4639,9 +4644,8 @@ function renderBoard(type) {
     });
     rows.sort((a, b) => b.score - a.score);
     const medals = ['🥇', '🥈', '🥉'];
-    const hdr = `<div class="board-row hdr"><div>O'rin</div><div>O'yinchi</div><div style="text-align:center">Ball</div><div style="text-align:center">O'yinlar</div></div>`;
     if (!rows.length) {
-      boardTable.innerHTML = hdr + '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13.5px;font-weight:600">Hali hech kim o\'ynamagan</div>';
+      boardTable.innerHTML = hdr + '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13.5px;font-weight:600">Hali hech kim o\'ynamagan 🎮</div>';
       return;
     }
     const trs = rows.slice(0, 15).map((r, i) => {
@@ -4651,6 +4655,9 @@ function renderBoard(type) {
       return `<div class="board-row ${bg}${r.isMe ? ' my-row' : ''}">${rank}<div class="b-player">${av}<div class="b-name">${r.name}${r.isMe ? ' (siz)' : ''}</div></div><div class="b-score">${r.score}</div><div class="b-games">${r.games}</div></div>`;
     }).join('');
     boardTable.innerHTML = hdr + trs;
+  }).catch(err => {
+    console.error('Leaderboard xatosi:', err);
+    boardTable.innerHTML = hdr + '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13.5px;font-weight:600">⚠️ Ma\'lumot yuklanmadi. Qayta urinib ko\'ring.</div>';
   });
 }
 
