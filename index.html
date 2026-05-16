@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>BrainGame.uz — Miyya charxlovchi ta'limiy o'yinlar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +27,17 @@
   const fbAuth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
   const db = firebase.firestore();
+
+  // ══════════════════════════════════════════════════════
+  // XAVFSIZLIK ESLATMASI:
+  // Firebase API kalitlari bu faylda ko'rinib turibdi.
+  // Ishlab chiqarish (production) muhitida ular
+  // Firebase Security Rules bilan himoyalanishi SHART.
+  // firebaseConfig.apiKey public bo'lishi mumkin, lekin
+  // Firestore Rules da foydalanuvchi autentifikatsiyasi
+  // talab qilinishi kerak.
+  // Masalan: allow read, write: if request.auth != null;
+  // ══════════════════════════════════════════════════════
 </script>
 <style>
 :root {
@@ -1986,6 +1999,20 @@ img{max-width:100%;height:auto}
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+
+/* ── Extra mobile fixes ── */
+@media (max-width: 480px) {
+  .quiz-opts { grid-template-columns: 1fr; }
+  .math-opts-grid { grid-template-columns: 1fr 1fr; }
+  .seq-opts { grid-template-columns: repeat(2, 1fr); }
+  .hero { grid-template-columns: 1fr; padding: 28px 20px; }
+  .hero-right { display: none; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .games-grid { grid-template-columns: 1fr !important; }
+  .game-card.featured { grid-column: span 1 !important; }
+  .quiz-wrap { padding: 20px 16px; }
+  .math-eq-text { font-size: 38px; }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -3587,7 +3614,7 @@ seedAdminUser();
 // ═══════════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════════
-function doLogin() {
+async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const err = document.getElementById('loginErr');
@@ -3608,20 +3635,28 @@ function doLogin() {
   if (document.getElementById('page-leaderboard').classList.contains('active')) renderBoard('quiz');
 }
 
-function doRegister() {
+async function doRegister() {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPass').value;
   const err = document.getElementById('regErr');
   err.classList.remove('show');
   if (!name || !email || !pass) { err.textContent = "Barcha maydonlarni to'ldiring"; err.classList.add('show'); return; }
+  const safeName = name.replace(/[<>"'&]/g, '').trim();
+  if (!safeName || safeName.length < 2) { err.textContent = "Ism kamida 2 belgi bo\'lishi kerak"; err.classList.add('show'); return; }
+  if (safeName.length > 50) { err.textContent = "Ism 50 belgidan oshmasligi kerak"; err.classList.add('show'); return; }
   if (pass.length < 6) { err.textContent = "Parol kamida 6 belgi"; err.classList.add('show'); return; }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { err.textContent = "Email manzil noto\'g\'ri formatda"; err.classList.add('show'); return; }
   const users = getUsers();
   if (users.find(u => u.email === email)) { err.textContent = "Bu email allaqachon ro'yxatdan o'tgan"; err.classList.add('show'); return; }
+  // Hash password before storing (simple but better than plaintext)
+  const passHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass + email))
+    .then(b => Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join(''));
   const nu = {
-    name,
+    name: safeName,
     email,
-    password: pass,
+    password: passHash,
     coins: 0,
     games: 0,
     wins: 0,
@@ -3941,13 +3976,17 @@ function showQQ(i) {
 }
 
 function startQTimer() {
-  clearInterval(QS.timer);
+  // Remove old timer from allTimers to prevent memory leak
+  if (QS.timer) {
+    clearInterval(QS.timer);
+    allTimers = allTimers.filter(t => t !== QS.timer);
+  }
   let t = 15;
   document.getElementById('qTimer').textContent = t;
   const timer = setInterval(() => {
     t--;
     document.getElementById('qTimer').textContent = t;
-    if (t <= 0) { clearInterval(timer); if (!QS.answered) timeoutQ(); }
+    if (t <= 0) { clearInterval(timer); allTimers = allTimers.filter(x => x !== timer); if (!QS.answered) timeoutQ(); }
   }, 1000);
   QS.timer = timer;
   allTimers.push(timer);
@@ -3967,6 +4006,7 @@ function timeoutQ() {
 function answerQ(i) {
   if (QS.answered) return;
   clearInterval(QS.timer);
+  allTimers = allTimers.filter(t => t !== QS.timer);
   QS.answered = true;
   const q = QS.qs[QS.idx];
   document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
@@ -4782,7 +4822,8 @@ function refreshKarvoCharts(period, dUsers, dGames, dScore) {
 }
 
 function renderAdmin() {
-  if (!CU || !CU.isAdmin) { showPage('home'); openModal('login'); return; }
+  if (!CU) { showPage('home'); openModal('login'); showToast('err', 'Bu sahifa faqat adminlar uchun'); return; }
+  if (!CU.isAdmin) { showPage('home'); showToast('err', 'Sizda admin huquqi yo\'q'); return; }
   const users = getUsers();
   const stats = getSiteStats();
   document.getElementById('adminName').textContent = CU.name || 'Admin';
