@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="BrainGame.uz — 8K Ultra-HD sifatga moslashtirilgan miyya charxlovchi ta'limiy o'yinlar platformasi.">
+<meta name="theme-color" content="#2563eb">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>BrainGame.uz — Miyya charxlovchi ta'limiy o'yinlar</title>
+<title>BrainGame.uz — 8K Ultra-HD ta'limiy o'yinlar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
@@ -2013,6 +2017,66 @@ img{max-width:100%;height:auto}
   .quiz-wrap { padding: 20px 16px; }
   .math-eq-text { font-size: 38px; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   8K / ULTRA-HD VA HIGH-DPI QO‘LLAB-QUVVATLASH
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --shadow-hd: 0 2px 6px rgba(0,0,0,.05), 0 18px 52px rgba(0,0,0,.09);
+}
+
+/* Vektor va kanvas elementlarni yuqori aniqlikda render qilish */
+img, svg, canvas {
+  image-rendering: -webkit-optimize-contrast;
+  shape-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+}
+
+/* Foydalanuvchi harakatlarni kamaytirishni xohlaganda */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Katta ekranlarda (4K → 8K) interfeysni bir tekis kattalashtirish */
+body {
+  --ui-scale: 1;
+  transform: scale(var(--ui-scale));
+  transform-origin: 0 0;
+  width: calc(100% / var(--ui-scale));
+  min-height: calc(100vh / var(--ui-scale));
+}
+
+@media (min-width: 2560px) { body { --ui-scale: 1.12; } }
+@media (min-width: 3200px) { body { --ui-scale: 1.25; } }
+@media (min-width: 3840px) { body { --ui-scale: 1.38; } }
+@media (min-width: 5120px) { body { --ui-scale: 1.62; } }
+@media (min-width: 7680px) { body { --ui-scale: 1.95; } }
+
+/* Karta va asosiy bloklar uchun chuqurroq soya — 8K ekranda ajralib turadi */
+.card, .hero, .game-card, .stat-card, .modal, .topbar {
+  box-shadow: var(--shadow-hd);
+}
+
+/* Juda katta ekranlarda kontentni yanada kengaytirish */
+@media (min-width: 1400px) {
+  .content { margin-left: auto; margin-right: auto; }
+}
+@media (min-width: 3840px) {
+  .hero { grid-template-columns: 1fr 380px; }
+}
+@media (min-width: 5120px) {
+  .hero { grid-template-columns: 1fr 420px; }
+}
+@media (min-width: 7680px) {
+  .hero { grid-template-columns: 1fr 480px; }
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -3199,6 +3263,22 @@ img{max-width:100%;height:auto}
 const UK = 'bg_users_v2', SK = 'bg_session_v2', SCK = 'bg_scores_v2', VK = 'bg_site_v2';
 let CU = null, CG = null, selectedSubj = 'all';
 let allTimers = [];
+
+// ─── 8K / Ultra-HD yordamchilari ─────────────────
+function getUIScale() {
+  // Brauzer viewport kengligi asosida CSS media query bilan mos ravishda
+  const w = window.innerWidth || 0;
+  if (w >= 7680) return 1.95;
+  if (w >= 5120) return 1.62;
+  if (w >= 3840) return 1.38;
+  if (w >= 3200) return 1.25;
+  if (w >= 2560) return 1.12;
+  return 1;
+}
+function getCanvasPixelRatio() {
+  return Math.max(window.devicePixelRatio || 1, getUIScale());
+}
+
 
 // ─── Firestore helpers ───────────────────────
 // Users collection: db.collection('users').doc(email)
@@ -4765,6 +4845,7 @@ function buildKarvoAreaChart(canvasId, labels, data, colorRGB) {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
+      devicePixelRatio: getCanvasPixelRatio(),
       animation: { duration: 1000, easing: 'easeInOutQuart' },
       interaction: { mode: 'index', intersect: false },
       plugins: {
